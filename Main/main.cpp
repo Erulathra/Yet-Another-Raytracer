@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "TVector3.h"
 
@@ -12,9 +13,8 @@ int main(int argc, char *argv[]) {
     std::cout << VectorOne << " + " << VectorTwo << " = " << VectorOne + VectorTwo << std::endl;
     std::cout << VectorTwo << " + " << VectorOne << " = " << VectorTwo + VectorOne << std::endl;
 
-
-    std::cout << "Angle between " << VectorOne << ", and " << VectorTwo << "is: "
-              << VectorOne.Angle(VectorTwo) << " rad" << std::endl;
+    std::cout << "Angle between " << VectorOne << ", and " << VectorTwo << " is: "
+              << VectorOne.Angle(VectorTwo) << " rad " << std::endl;
 
     SG::TVector3<double> VectorFive = VectorTree.Cross(VectorFour);
     std::cout << "Normal vector to " << VectorTree << " and " << VectorFour
