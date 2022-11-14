@@ -18,7 +18,8 @@ namespace SG
         [[nodiscard]] const char* what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW override;
     };
 
-    template<typename T> class TVector3
+    template<typename T>
+    class TVector3
     {
     private:
         T X;
