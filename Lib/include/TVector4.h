@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include "TMat4.h"
 
 namespace SG {
 
@@ -87,8 +88,8 @@ namespace SG {
 
         void operator-=(TVector4 const &Another) { this = this - Another; }
 
-        TVector4 operator*(T const &Scalar) {
-            TVector4 Result;
+        TVector4<T> operator*(T const &Scalar) {
+            TVector4<T> Result;
             Result.X = this->X * Scalar;
             Result.Y = this->Y * Scalar;
             Result.Z = this->Z * Scalar;
@@ -96,7 +97,18 @@ namespace SG {
             return Result;
         }
 
-        TVector4 operator/(T const &Scalar) {
+        TVector4<T> operator*(TMat4<T> Matrix) {
+            TVector4<T> Result;
+            Result.X = X * Matrix[{0, 0}] + Y * Matrix[{0, 1}] + Z * Matrix[{0, 2}] + W * Matrix[{0, 3}];
+            Result.Y = X * Matrix[{1, 0}] + Y * Matrix[{1, 1}] + Z * Matrix[{1, 2}] + W * Matrix[{1, 3}];
+            Result.Z = X * Matrix[{2, 0}] + Y * Matrix[{2, 1}] + Z * Matrix[{2, 2}] + W * Matrix[{2, 3}];
+            Result.W = X * Matrix[{3, 0}] + Y * Matrix[{3, 1}] + Z * Matrix[{3, 2}] + W * Matrix[{3, 3}];
+
+            return Result;
+        }
+
+
+        TVector4<T> operator/(T const &Scalar) {
             if (Scalar == 0)
                 throw DivisionByZeroException();
 

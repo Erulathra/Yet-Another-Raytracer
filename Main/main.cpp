@@ -35,5 +35,9 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Inverted Test Matrix: " << std::endl;
     std::cout << TestMatrix.Inverse() << std::endl;
+
+    SG::TMat4<double> ScaleMatrix = SG::TMat4<double>::Scale(2, 2, 2);
+    std::cout << "ScaledVector: " << std::endl;
+    std::cout << SG::TVector4<double>(1, 0, 1, 1) * ScaleMatrix << std::endl;
     return 0;
 }
