@@ -22,7 +22,7 @@ namespace SG {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     if (i == j)
-                        Grid[i][j] = 1;
+                        Grid[i][j] = x;
                     else
                         Grid[i][j] = 0;
                 }
@@ -41,14 +41,13 @@ namespace SG {
             return Grid[Coordinates.first][Coordinates.second];
         }
 
-        TMat4<T> operator-() {
-            TMat4<T> Result(0);
+        TMat4<T>& operator-() {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result[i][j] = -Grid[i][j];
+                    this->Grid[i][j] = -this->Grid[i][j];
                 }
             }
-            return Result;
+            return *this;
         }
 
         TMat4<T> operator+(TMat4<T> Another) {
@@ -63,7 +62,14 @@ namespace SG {
         }
 
         TMat4<T> operator-(TMat4<T> Another) {
-            return *this + (-Another);
+            TMat4<T> Result(0);
+            for (int i = 0; i < GRID_SIZE_X; ++i) {
+                for (int j = 0; j < GRID_SIZE_Y; ++j) {
+                    Result.Grid[i][j] = Grid[i][j] - Another.Grid[i][j];
+                }
+            }
+
+            return Result;
         }
 
         TMat4<T> &operator=(TMat4<T> Another) {
@@ -72,6 +78,16 @@ namespace SG {
                     Grid[i][j] = Another.Grid[i][j];
                 }
             }
+        }
+
+        bool operator==(TMat4<T> Another) {
+            for (int i = 0; i < GRID_SIZE_X; ++i) {
+                for (int j = 0; j < GRID_SIZE_Y; ++j) {
+                    if(Grid[i][j] != Another.Grid[i][j])
+                        return false;
+                }
+            }
+            return true;
         }
 
         void operator+=(TMat4<T> Another) {
@@ -101,7 +117,7 @@ namespace SG {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     for (int k = 0; k < GRID_SIZE_X; ++k) {
-                        Result.Grid[i][j] += Grid[i][k] * Another.Grid[k][j];
+                        Result.Grid[i][j] += Grid[k][j] * Another.Grid[i][k];
                     }
                 }
             }
@@ -116,9 +132,9 @@ namespace SG {
         TMat4<T> Transpose() {
             TMat4<T> Result(0);
 
-            for (int i = 0; i < GRID_SIZE_X; ++i) {
-                for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result[i][j] = Grid[j][i];
+            for (int i = 0; i < GRID_SIZE_X; i++) {
+                for (int j = 0; j < GRID_SIZE_Y; j++) {
+                    Result.Grid[i][j] = Grid[j][i];
                 }
             }
             return Result;
