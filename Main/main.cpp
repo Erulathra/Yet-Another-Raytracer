@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
     std::cout << MatTest1 * SG::TMat4<double>::RotationY(M_PI * 0.5) << std::endl;
 
 
-    SG::TMat4<double> ScaleMatrix = SG::TMat4<double>::Scale(2, 2, 2);
-    std::cout << "ScaledVector: " << std::endl;
-    std::cout << SG::TVector4<double>(1, 0, 1, 1) * ScaleMatrix << std::endl;
+    SG::TMat4<double> RotationMatrix = SG::TMat4<double>::RotationY(M_PI * 0.5);
+    std::cout << "Rotate : " << std::endl;
+    std::cout << SG::TVector4<double>(1, 0, 0, 1) * RotationMatrix << std::endl;
     return 0;
 }
