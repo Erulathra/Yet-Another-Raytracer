@@ -141,7 +141,7 @@ namespace SG {
         bool operator>=(const TVector4 &Rhs) const { return !(*this < Rhs); }
 
         friend std::ostream &operator<<(std::ostream &Os, const TVector4 &Vector3) {
-            Os << "[" << Vector3.X << "," << Vector3.Y << "," << Vector3.Z << "," << Vector3.Z << "]";
+            Os << "[" << Vector3.X << "," << Vector3.Y << "," << Vector3.Z << "," << Vector3.W << "]";
             return Os;
         }
 

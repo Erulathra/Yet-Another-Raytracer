@@ -339,8 +339,8 @@ namespace SG {
             TMat4<T> Result(1);
 
             Result[{0, 0}] = std::cos(radians);
-            Result[{2, 0}] = std::sin(radians);
-            Result[{0, 2}] = -std::sin(radians);
+            Result[{0, 2}] = std::sin(radians);
+            Result[{2, 0}] = -std::sin(radians);
             Result[{2, 2}] = std::cos(radians);
             return  Result;
         }
