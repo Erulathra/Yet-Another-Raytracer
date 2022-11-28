@@ -1,5 +1,4 @@
-#ifndef S1NU5GRAPHICS_VECTOR3_H
-#define S1NU5GRAPHICS_VECTOR3_H
+#pragma once
 
 #include <cmath>
 #include <exception>
@@ -8,17 +7,13 @@
 #include <string>
 #include <type_traits>
 #include "TMat4.h"
+#include "TVector3.h"
 
-namespace SG {
-
-    class DivisionByZeroException : std::exception {
-    public:
-    private:
-        [[nodiscard]] const char *what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW override;
-    };
-
-    template<typename T>
-    class TVector4 {
+namespace SG
+{
+    template <typename T>
+    class TVector4
+    {
     private:
         T X;
         T Y;
@@ -26,13 +21,14 @@ namespace SG {
         T W;
 
     public:
-        TVector4() : X(0), Y(0), Z(0), W(0) {};
+        TVector4() : X(0), Y(0), Z(0), W(0){};
 
         TVector4(T X, T Y, T Z, T W) : X(X), Y(Y), Z(Z), W(W) {}
 
         double Length() { return std::sqrt(X * X + Y * Y + Z * Z + W * W); }
 
-        TVector4 Normal() {
+        TVector4 Normal()
+        {
             double Length = this->Length();
             if (Length == 0)
                 throw DivisionByZeroException();
@@ -42,17 +38,21 @@ namespace SG {
 
         double Dot(TVector4 &rhs) { return X * rhs.X + Y * rhs.Y + Z * rhs.Z; }
 
-        double Angle(TVector4 &rhs) {
+        double Angle(TVector4 &rhs)
+        {
             return acos(this->Dot(rhs) / (this->Length() * rhs.Length()));
         }
 
-        TVector4 Cross(TVector4 rhs) {
+        TVector4 Cross(TVector4 rhs)
+        {
             return TVector4<T>(this->Y * rhs.Z - this->Z * rhs.Y, this->Z * rhs.X - this->X * rhs.Z,
                                this->X * rhs.Y - this->Y * rhs.X);
         }
 
-        TVector4 &operator=(TVector4 const &Another) {
-            if (this == &Another) {
+        TVector4 &operator=(TVector4 const &Another)
+        {
+            if (this == &Another)
+            {
                 return *this;
             }
 
@@ -63,14 +63,16 @@ namespace SG {
             return *this;
         }
 
-        TVector4 &operator-() {
+        TVector4 &operator-()
+        {
             this->X = -this->X;
             this->Y = -this->Y;
             this->Z = -this->Z;
             this->W = -this->W;
         }
 
-        TVector4 operator+(TVector4 const &Another) {
+        TVector4 operator+(TVector4 const &Another)
+        {
             TVector4 Result;
             Result.X = this->X + Another.X;
             Result.Y = this->Y + Another.Y;
@@ -79,7 +81,8 @@ namespace SG {
             return Result;
         }
 
-        TVector4 operator-(TVector4 const &Another) {
+        TVector4 operator-(TVector4 const &Another)
+        {
             TVector4 Result = *this + (-Another);
             return Result;
         }
@@ -88,7 +91,8 @@ namespace SG {
 
         void operator-=(TVector4 const &Another) { this = this - Another; }
 
-        TVector4<T> operator*(T const &Scalar) {
+        TVector4<T> operator*(T const &Scalar)
+        {
             TVector4<T> Result;
             Result.X = this->X * Scalar;
             Result.Y = this->Y * Scalar;
@@ -97,7 +101,8 @@ namespace SG {
             return Result;
         }
 
-        TVector4<T> operator*(TMat4<T> Matrix) {
+        TVector4<T> operator*(TMat4<T> Matrix)
+        {
             TVector4<T> Result;
             Result.X = X * Matrix[{0, 0}] + Y * Matrix[{0, 1}] + Z * Matrix[{0, 2}] + W * Matrix[{0, 3}];
             Result.Y = X * Matrix[{1, 0}] + Y * Matrix[{1, 1}] + Z * Matrix[{1, 2}] + W * Matrix[{1, 3}];
@@ -107,8 +112,8 @@ namespace SG {
             return Result;
         }
 
-
-        TVector4<T> operator/(T const &Scalar) {
+        TVector4<T> operator/(T const &Scalar)
+        {
             if (Scalar == 0)
                 throw DivisionByZeroException();
 
@@ -124,13 +129,15 @@ namespace SG {
 
         void operator/=(T const &Scalar) { *this = *this / Scalar; }
 
-        bool operator==(const TVector4 &Rhs) const {
+        bool operator==(const TVector4 &Rhs) const
+        {
             return X == Rhs.X && Y == Rhs.Y && Z == Rhs.Z && W = Rhs.W;
         }
 
         bool operator!=(const TVector4 &Rhs) const { return !(Rhs == *this); }
 
-        bool operator<(const TVector4 &Rhs) const {
+        bool operator<(const TVector4 &Rhs) const
+        {
             return this->Length() < Rhs.Lenght();
         }
 
@@ -140,12 +147,14 @@ namespace SG {
 
         bool operator>=(const TVector4 &Rhs) const { return !(*this < Rhs); }
 
-        friend std::ostream &operator<<(std::ostream &Os, const TVector4 &Vector3) {
+        friend std::ostream &operator<<(std::ostream &Os, const TVector4 &Vector3)
+        {
             Os << "[" << Vector3.X << "," << Vector3.Y << "," << Vector3.Z << "," << Vector3.W << "]";
             return Os;
         }
 
-        std::string str() {
+        std::string str()
+        {
             std::ostringstream result;
             result << *this;
             return result.str();
@@ -153,5 +162,3 @@ namespace SG {
     };
 
 } // namespace SG
-
-#endif // S1NU5GRAPHICS_VECTOR3_H

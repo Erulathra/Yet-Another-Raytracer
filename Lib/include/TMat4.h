@@ -1,5 +1,4 @@
-#ifndef REALISTICENGINE_TMAT4_H
-#define REALISTICENGINE_TMAT4_H
+#pragma once
 
 #include <array>
 #include <cstdint>
@@ -358,5 +357,3 @@ namespace SG {
 
     };
 }
-
-#endif //REALISTICENGINE_TMAT4_H

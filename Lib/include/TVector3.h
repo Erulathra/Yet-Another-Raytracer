@@ -1,5 +1,4 @@
-#ifndef S1NU5GRAPHICS_VECTOR3_H
-#define S1NU5GRAPHICS_VECTOR3_H
+#pragma once
 
 #include <cmath>
 #include <exception>
@@ -21,17 +20,16 @@ namespace SG
     template<typename T>
     class TVector3
     {
-    private:
+    public:
         T X;
         T Y;
         T Z;
 
-    public:
-        TVector3() : X(0), Y(0), Z(0)
-        {};
+        TVector3() : X(0), Y(0), Z(0) {}
 
-        TVector3(T X, T Y, T Z) : X(X), Y(Y), Z(Z)
-        {}
+        TVector3(T x) : X(x), Y(x), Z(x) {}
+
+        TVector3(T X, T Y, T Z) : X(X), Y(Y), Z(Z) {}
 
         double Length()
         { return std::sqrt(X * X + Y * Y + Z * Z); }
@@ -108,6 +106,11 @@ namespace SG
             Result.Z = this->Z * Scalar;
             return Result;
         }
+        
+        friend TVector3 operator*(T Scalar, TVector3<T> Vector)
+        {
+            return Vector * Scalar;
+        }
 
         TVector3 operator/(T const& Scalar)
         {
@@ -164,5 +167,3 @@ namespace SG
     };
 
 } // namespace SG
-
-#endif // S1NU5GRAPHICS_VECTOR3_H
