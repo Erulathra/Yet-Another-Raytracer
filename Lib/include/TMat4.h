@@ -40,13 +40,14 @@ namespace SG {
             return Grid[Coordinates.first][Coordinates.second];
         }
 
-        TMat4<T>& operator-() {
+        TMat4<T> operator-() {
+            TMat4<T> Result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    this->Grid[i][j] = -this->Grid[i][j];
+                    Result.Grid[i][j] = -this->Grid[i][j];
                 }
             }
-            return *this;
+            return Result;
         }
 
         TMat4<T> operator+(TMat4<T> Another) {

@@ -63,12 +63,13 @@ namespace SG
             return *this;
         }
 
-        TVector4 &operator-()
+        TVector4 operator-()
         {
-            this->X = -this->X;
-            this->Y = -this->Y;
-            this->Z = -this->Z;
-            this->W = -this->W;
+            TVector4<T> Result;
+            Result.X = -this->X;
+            Result.Y = -this->Y;
+            Result.Z = -this->Z;
+            Result.W = -this->W;
         }
 
         TVector4 operator+(TVector4 const &Another)

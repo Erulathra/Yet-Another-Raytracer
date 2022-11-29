@@ -30,10 +30,12 @@ namespace SG
             return *this;
         }
 
-        TQuanternion &operator-()
+        TQuanternion operator-()
         {
-            this->Scalar = -this->Scalar;
-            this->Vector = -this->Vector;
+            TQuanternion<T> Result;
+            Result.Scalar = -this->Scalar;
+            Result.Vector = -this->Vector;
+            return Result;
         }
 
         TQuanternion operator+(TQuanternion const &another)
@@ -44,9 +46,9 @@ namespace SG
             return Result;
         }
 
-        TQuanternion operator-(TQuanternion const &another)
+        TQuanternion operator-(TQuanternion another)
         {
-            return *this + (-*this);
+            return *this + (-another);
         }
 
         void operator+=(TQuanternion const &another)

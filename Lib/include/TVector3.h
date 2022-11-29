@@ -70,11 +70,13 @@ namespace SG
             return *this;
         }
 
-        TVector3& operator-()
+        TVector3 operator-()
         {
-            this->X = -this->X;
-            this->Y = -this->Y;
-            this->Z = -this->Z;
+            TVector3<T> Result;
+            Result.X = -this->X;
+            Result.Y = -this->Y;
+            Result.Z = -this->Z;
+            return Result;
         }
 
         TVector3 operator+(TVector3 const& Another)
