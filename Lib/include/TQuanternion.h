@@ -11,6 +11,7 @@ namespace SG
         T Scalar;
         TVector3<T> Vector;
 
+        TQuanternion() {};
     public:
         TQuanternion(T a, T i, T j, T k)
             : Scalar(a), Vector(i, j, k) {}
@@ -18,7 +19,7 @@ namespace SG
         TQuanternion(T a, TVector3<T> Vector)
             : Scalar(a), Vector(Vector) {}
 
-        TQuanternion operator=(TQuanternion const &another)
+        TQuanternion &operator=(TQuanternion const &another)
         {
             if (this == *another)
                 return *this;
@@ -45,7 +46,9 @@ namespace SG
 
         TQuanternion operator-(TQuanternion const &another)
         {
-            TQuanternion Result = *this + (-another);
+            TQuanternion Result;
+            Result.Scalar = this->Scalar - another.Scalar;
+            Result.Vector = this->Vector - another.Vector;
             return Result;
         }
 
@@ -59,10 +62,10 @@ namespace SG
             this = this - another;
         }
 
-        TQuanternion<T> operator*(TQuanternion<T> const &another)
+        TQuanternion<T> operator*(TQuanternion<T> &another)
         {
             TQuanternion Result;
-            Result.Scalar = this->Scalar * another.Scalar - this->Vector.dot(another.Vector);
+            Result.Scalar = this->Scalar * another.Scalar - this->Vector.Dot(another.Vector);
             Result.Vector = this->Scalar * another.Vector + another.Scalar * this->Vector +
                             this->Vector.Cross(another.Vector);
             return Result;

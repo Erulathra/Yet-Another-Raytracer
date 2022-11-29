@@ -88,7 +88,10 @@ namespace SG
 
         TVector3 operator-(TVector3 const& Another)
         {
-            TVector3 Result = *this + (-Another);
+            TVector3 Result;
+            Result.X = this->X - Another.X;
+            Result.Y = this->Y - Another.Y;
+            Result.Z = this->Z - Another.Z;
             return Result;
         }
 
