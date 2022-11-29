@@ -46,10 +46,7 @@ namespace SG
 
         TQuanternion operator-(TQuanternion const &another)
         {
-            TQuanternion Result;
-            Result.Scalar = this->Scalar - another.Scalar;
-            Result.Vector = this->Vector - another.Vector;
-            return Result;
+            return *this + (-*this);
         }
 
         void operator+=(TQuanternion const &another)
@@ -62,7 +59,7 @@ namespace SG
             this = this - another;
         }
 
-        TQuanternion<T> operator*(TQuanternion<T> &another)
+        TQuanternion<T> operator*(TQuanternion<T> another)
         {
             TQuanternion Result;
             Result.Scalar = this->Scalar * another.Scalar - this->Vector.Dot(another.Vector);
@@ -71,11 +68,27 @@ namespace SG
             return Result;
         }
 
-        TQuanternion<T> operator/(TQuanternion<T> const &another)
+        TQuanternion<T> operator*(double scalar)
+        {
+            TQuanternion Result;
+            Result.Scalar = scalar * Scalar;
+            Result.Vector = scalar * Vector;
+            return Result;
+        }
+
+        friend TQuanternion<T> operator*(T scalar, TQuanternion<T> Quanternion)
+        {
+            TQuanternion Result;
+            Result.Scalar = scalar * Quanternion.Scalar;
+            Result.Vector = scalar * Quanternion.Vector;
+            return Result;
+        }
+
+        TQuanternion<T> operator/(TQuanternion<T> another)
         {
             T factor = 1/(std::pow(another.Scalar, 2), another.Vector.Dot(another.Vector));
 
-            return this * (factor * another);
+            return *this * (factor * another);
         }
         
         void operator*=(TQuanternion const &another)
