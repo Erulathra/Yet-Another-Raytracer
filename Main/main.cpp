@@ -17,10 +17,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Quanternion 2: " << quanternion_2 << std::endl;
     std::cout << "Minus Quanternion 2: " << -quanternion_2 << std::endl;
 
-    std::cout << "Addition: " << quanternion_1 + quanternion_2 << std::endl;
-    std::cout << "Subtraction: " << quanternion_1 - quanternion_2 << std::endl;
+    std::cout << "Sum: " << quanternion_1 + quanternion_2 << std::endl;
+    std::cout << "Difference: " << quanternion_1 - quanternion_2 << std::endl;
 
-    std::cout << "Multiplication: " << quanternion_1 * quanternion_2 << std::endl;
+    std::cout << "Product: " << quanternion_1 * quanternion_2 << std::endl;
     std::cout << "Division: " << quanternion_1 / quanternion_2 << std::endl;
     return 0;
 }
