@@ -88,9 +88,12 @@ namespace SG
 
         TQuanternion<T> operator/(TQuanternion<T> another)
         {
-            T factor = 1/(std::pow(another.Scalar, 2), another.Vector.Dot(another.Vector));
+            TQuanternion<T> Result;
+            T factor = 1/(another.Scalar * another.Scalar + another.Vector.Dot(another.Vector));
+            Result.Scalar = (Scalar * another.Scalar + Vector.Dot(another.Vector)) * factor;
+            Result.Vector = factor * (-Scalar * another.Vector + another.Scalar * Vector - Vector.Cross(another.Vector));
 
-            return *this * (factor * another);
+            return Result;
         }
         
         void operator*=(TQuanternion const &another)
