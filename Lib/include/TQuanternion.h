@@ -30,6 +30,15 @@ namespace SG
             return *this;
         }
 
+        bool operator==(TQuanternion const &another)
+        {
+            if(this->Scalar == another.Scalar && this->Vector == another.Vector){
+                return true;
+            }
+
+            return false;
+        }
+
         TQuanternion operator-()
         {
             TQuanternion<T> Result;
