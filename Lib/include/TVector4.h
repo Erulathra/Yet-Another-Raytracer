@@ -15,28 +15,28 @@ namespace SG
     class TVector4
     {
     private:
-        T X;
-        T Y;
-        T Z;
-        T W;
+        T x;
+        T y;
+        T z;
+        T w;
 
     public:
-        TVector4() : X(0), Y(0), Z(0), W(0){};
+        TVector4() : x(0), y(0), z(0), w(0){};
 
-        TVector4(T X, T Y, T Z, T W) : X(X), Y(Y), Z(Z), W(W) {}
+        TVector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
-        double Length() { return std::sqrt(X * X + Y * Y + Z * Z + W * W); }
+        double Length() { return std::sqrt(x * x + y * y + z * z + w * w); }
 
         TVector4 Normal()
         {
-            double Length = this->Length();
-            if (Length == 0)
+            double length = this->Length();
+            if (length == 0)
                 throw DivisionByZeroException();
 
-            return *this / Length;
+            return *this / length;
         }
 
-        double Dot(TVector4 &rhs) { return X * rhs.X + Y * rhs.Y + Z * rhs.Z; }
+        double Dot(TVector4 &rhs) { return x * rhs.x + y * rhs.y + z * rhs.z; }
 
         double Angle(TVector4 &rhs)
         {
@@ -45,113 +45,114 @@ namespace SG
 
         TVector4 Cross(TVector4 rhs)
         {
-            return TVector4<T>(this->Y * rhs.Z - this->Z * rhs.Y, this->Z * rhs.X - this->X * rhs.Z,
-                               this->X * rhs.Y - this->Y * rhs.X);
+            return TVector4<T>(this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,
+                               this->x * rhs.y - this->y * rhs.x);
         }
 
-        TVector4 &operator=(TVector4 const &Another)
+        TVector4 &operator=(TVector4 const &another)
         {
-            if (this == &Another)
+            if (this == &another)
             {
                 return *this;
             }
 
-            this->X = Another.X;
-            this->Y = Another.Y;
-            this->Z = Another.Z;
-            this->W = Another.W;
+            this->x = another.x;
+            this->y = another.y;
+            this->z = another.z;
+            this->w = another.w;
             return *this;
         }
 
         TVector4 operator-()
         {
-            TVector4<T> Result;
-            Result.X = -this->X;
-            Result.Y = -this->Y;
-            Result.Z = -this->Z;
-            Result.W = -this->W;
+            TVector4<T> result;
+            result.x = -this->x;
+            result.y = -this->y;
+            result.z = -this->z;
+            result.w = -this->w;
+            return result;
         }
 
-        TVector4 operator+(TVector4 const &Another)
+        TVector4 operator+(TVector4 const &another)
         {
-            TVector4 Result;
-            Result.X = this->X + Another.X;
-            Result.Y = this->Y + Another.Y;
-            Result.Z = this->Z + Another.Z;
-            Result.W = this->W + Another.W;
-            return Result;
+            TVector4 result;
+            result.x = this->x + another.x;
+            result.y = this->y + another.y;
+            result.z = this->z + another.z;
+            result.w = this->w + another.w;
+            return result;
         }
 
-        TVector4 operator-(TVector4 const &Another)
+        TVector4 operator-(TVector4 const &another)
         {
-            TVector4 Result = *this + (-Another);
-            return Result;
+            TVector4 result = *this + (-another);
+            return result;
         }
 
-        void operator+=(TVector4 const &Another) { this = this + Another; }
+        void operator+=(TVector4 const &another) { this = this + another; }
 
-        void operator-=(TVector4 const &Another) { this = this - Another; }
+        void operator-=(TVector4 const &another) { this = this - another; }
 
-        TVector4<T> operator*(T const &Scalar)
+        TVector4<T> operator*(T const &scalar)
         {
-            TVector4<T> Result;
-            Result.X = this->X * Scalar;
-            Result.Y = this->Y * Scalar;
-            Result.Z = this->Z * Scalar;
-            Result.W = this->W * Scalar;
-            return Result;
+            TVector4<T> result;
+            result.x = this->x * scalar;
+            result.y = this->y * scalar;
+            result.z = this->z * scalar;
+            result.w = this->w * scalar;
+            return result;
         }
 
-        TVector4<T> operator*(TMat4<T> Matrix)
+        TVector4<T> operator*(TMat4<T> matrix)
         {
-            TVector4<T> Result;
-            Result.X = X * Matrix[{0, 0}] + Y * Matrix[{0, 1}] + Z * Matrix[{0, 2}] + W * Matrix[{0, 3}];
-            Result.Y = X * Matrix[{1, 0}] + Y * Matrix[{1, 1}] + Z * Matrix[{1, 2}] + W * Matrix[{1, 3}];
-            Result.Z = X * Matrix[{2, 0}] + Y * Matrix[{2, 1}] + Z * Matrix[{2, 2}] + W * Matrix[{2, 3}];
-            Result.W = X * Matrix[{3, 0}] + Y * Matrix[{3, 1}] + Z * Matrix[{3, 2}] + W * Matrix[{3, 3}];
+            TVector4<T> result;
+            result.x = x * matrix[{0, 0}] + y * matrix[{0, 1}] + z * matrix[{0, 2}] + w * matrix[{0, 3}];
+            result.y = x * matrix[{1, 0}] + y * matrix[{1, 1}] + z * matrix[{1, 2}] + w * matrix[{1, 3}];
+            result.z = x * matrix[{2, 0}] + y * matrix[{2, 1}] + z * matrix[{2, 2}] + w * matrix[{2, 3}];
+            result.w = x * matrix[{3, 0}] + y * matrix[{3, 1}] + z * matrix[{3, 2}] + w * matrix[{3, 3}];
 
-            return Result;
+            return result;
         }
 
-        TVector4<T> operator/(T const &Scalar)
+        TVector4<T> operator/(T const &scalar)
         {
-            if (Scalar == 0)
+            if (scalar == 0)
                 throw DivisionByZeroException();
 
-            TVector4 Result;
-            Result.X = this->X / Scalar;
-            Result.Y = this->Y / Scalar;
-            Result.Z = this->Z / Scalar;
-            Result.W = this->W / Scalar;
-            return Result;
+            TVector4 result;
+            result.x = this->x / scalar;
+            result.y = this->y / scalar;
+            result.z = this->z / scalar;
+            result.w = this->w / scalar;
+            return result;
         }
 
-        void operator*=(T const &Scalar) { *this = *this * Scalar; }
+        void operator*=(T const &scalar) { *this = *this * scalar; }
 
-        void operator/=(T const &Scalar) { *this = *this / Scalar; }
+        void operator/=(T const &scalar) { *this = *this / scalar; }
 
-        bool operator==(const TVector4 &Rhs) const
+        bool operator==(const TVector4 &rhs) const
         {
-            return X == Rhs.X && Y == Rhs.Y && Z == Rhs.Z && W = Rhs.W;
+            return x == rhs.x && y == rhs.y && z == rhs.z && w = rhs.w;
         }
 
-        bool operator!=(const TVector4 &Rhs) const { return !(Rhs == *this); }
+        bool operator!=(const TVector4 &rhs) const { return !(rhs == *this); }
 
-        bool operator<(const TVector4 &Rhs) const
+        bool operator<(const TVector4 &rhs) const
         {
-            return this->Length() < Rhs.Lenght();
+            return this->Length() < rhs.Lenght();
         }
 
-        bool operator>(const TVector4 &Rhs) const { return Rhs < *this; }
+        bool operator>(const TVector4 &rhs) const { return rhs < *this; }
 
-        bool operator<=(const TVector4 &Rhs) const { return !(Rhs < *this); }
+        bool operator<=(const TVector4 &rhs) const { return !(rhs < *this); }
 
-        bool operator>=(const TVector4 &Rhs) const { return !(*this < Rhs); }
+        bool operator>=(const TVector4 &rhs) const { return !(*this < rhs); }
 
-        friend std::ostream &operator<<(std::ostream &Os, const TVector4 &Vector3)
+        friend std::ostream &operator<<(std::ostream &os, const TVector4 &vector4)
         {
-            Os << "[" << Vector3.X << "," << Vector3.Y << "," << Vector3.Z << "," << Vector3.W << "]";
-            return Os;
+            os << "[" << vector4.x << "," << vector4.y << "," << vector4.z << "," << vector4.w << "]";
+            return os;
         }
 
         std::string str()

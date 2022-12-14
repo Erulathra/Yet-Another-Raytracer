@@ -12,117 +12,117 @@ namespace SG {
         static const uint8_t GRID_SIZE_X = 4;
         static const uint8_t GRID_SIZE_Y = 4;
 
-        std::array<std::array<T, 4>, 4> Grid;
+        std::array<std::array<T, 4>, 4> grid;
 
     public:
         TMat4() : TMat4(0) {}
 
-        TMat4(T x) {
+        explicit TMat4(T x) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     if (i == j)
-                        Grid[i][j] = x;
+                        grid[i][j] = x;
                     else
-                        Grid[i][j] = 0;
+                        grid[i][j] = 0;
                 }
             }
         }
 
-        TMat4(TMat4<T> &Clone) {
+        TMat4(TMat4<T> &clone) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Grid[i][j] = Clone.Grid[i][j];
+                    grid[i][j] = clone.grid[i][j];
                 }
             }
         }
 
-        T &operator[](std::pair<int, int> Coordinates) {
-            return Grid[Coordinates.first][Coordinates.second];
+        T &operator[](std::pair<int, int> coordinates) {
+            return grid[coordinates.first][coordinates.second];
         }
 
         TMat4<T> operator-() {
-            TMat4<T> Result(0);
+            TMat4<T> result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result.Grid[i][j] = -this->Grid[i][j];
+                    result.grid[i][j] = -this->grid[i][j];
                 }
             }
-            return Result;
+            return result;
         }
 
-        TMat4<T> operator+(TMat4<T> Another) {
-            TMat4<T> Result(0);
+        TMat4<T> operator+(TMat4<T> another) {
+            TMat4<T> result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result.Grid[i][j] = Grid[i][j] + Another.Grid[i][j];
-                }
-            }
-
-            return Result;
-        }
-
-        TMat4<T> operator-(TMat4<T> Another) {
-            TMat4<T> Result(0);
-            for (int i = 0; i < GRID_SIZE_X; ++i) {
-                for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result.Grid[i][j] = Grid[i][j] - Another.Grid[i][j];
+                    result.grid[i][j] = grid[i][j] + another.grid[i][j];
                 }
             }
 
-            return Result;
+            return result;
         }
 
-        TMat4<T> &operator=(TMat4<T> Another) {
+        TMat4<T> operator-(TMat4<T> another) {
+            TMat4<T> result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Grid[i][j] = Another.Grid[i][j];
+                    result.grid[i][j] = grid[i][j] - another.grid[i][j];
+                }
+            }
+
+            return result;
+        }
+
+        TMat4<T> &operator=(TMat4<T> another) {
+            for (int i = 0; i < GRID_SIZE_X; ++i) {
+                for (int j = 0; j < GRID_SIZE_Y; ++j) {
+                    grid[i][j] = another.grid[i][j];
                 }
             }
         }
 
-        bool operator==(TMat4<T> Another) {
+        bool operator==(TMat4<T> another) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    if(Grid[i][j] != Another.Grid[i][j])
+                    if(grid[i][j] != another.grid[i][j])
                         return false;
                 }
             }
             return true;
         }
 
-        void operator+=(TMat4<T> Another) {
-            *this = *this + Another;
+        void operator+=(TMat4<T> another) {
+            *this = *this + another;
         }
 
-        void operator-=(TMat4<T> Another) {
-            *this = *this - Another;
+        void operator-=(TMat4<T> another) {
+            *this = *this - another;
         }
 
-        TMat4<T> operator*(T Scalar) {
-            TMat4<T> Result(0);
+        TMat4<T> operator*(T scalar) {
+            TMat4<T> result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
-                    Result.Grid[i][j] = Scalar * Grid[i][j];
+                    result.grid[i][j] = scalar * grid[i][j];
                 }
             }
-            return Result;
+            return result;
         }
 
-        void operator*=(T Scalar) {
-            *this = *this * Scalar;
+        void operator*=(T scalar) {
+            *this = *this * scalar;
         }
 
-        TMat4<T> operator*(TMat4<T> Another) {
-            TMat4<T> Result(0);
+        TMat4<T> operator*(TMat4<T> another) {
+            TMat4<T> result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     for (int k = 0; k < GRID_SIZE_X; ++k) {
-                        Result.Grid[i][j] += Grid[k][j] * Another.Grid[i][k];
+                        result.grid[i][j] += grid[k][j] * another.grid[i][k];
                     }
                 }
             }
 
-            return Result;
+            return result;
         }
 
         void operator*=(TMat4<T> Another) {
@@ -130,174 +130,174 @@ namespace SG {
         }
 
         TMat4<T> Transpose() {
-            TMat4<T> Result(0);
+            TMat4<T> result(0);
 
             for (int i = 0; i < GRID_SIZE_X; i++) {
                 for (int j = 0; j < GRID_SIZE_Y; j++) {
-                    Result.Grid[i][j] = Grid[j][i];
+                    result.grid[i][j] = grid[j][i];
                 }
             }
-            return Result;
+            return result;
         }
 
         double Det() {
-            double Coefficient, Result = 1;
-            TMat4<T> Helper(*this);
+            double Coefficient, result = 1;
+            TMat4<T> helper(*this);
             for (int i = 0; i < 4; i++) {
                 for (int k = i + 1; k < 4; k++) {
-                    Coefficient = Helper.Grid[k][i] / Helper.Grid[i][i];
+                    Coefficient = helper.grid[k][i] / helper.grid[i][i];
                     for (int j = i; j < 4; j++)
-                        Helper.Grid[k][j] = Helper.Grid[k][j] - Coefficient * Helper.Grid[i][j];
+                        helper.grid[k][j] = helper.grid[k][j] - Coefficient * helper.grid[i][j];
                 }
             }
             for (int i = 0; i < 4; i++)
-                Result *= Helper.Grid[i][i];
-            return Result;
+                result *= helper.grid[i][i];
+            return result;
         }
 
         TMat4<T> Inverse() {
-            std::array<T, 16> Result;
-            std::array<T, 16> FlatGrid;
+            std::array<T, 16> result;
+            std::array<T, 16> flatGrid;
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; ++j) {
-                    FlatGrid[i + j * 4] = Grid[j][i];
+                    flatGrid[i + j * 4] = grid[j][i];
                 }
             }
 
-            Result[0] = FlatGrid[5] * FlatGrid[10] * FlatGrid[15] -
-                        FlatGrid[5] * FlatGrid[11] * FlatGrid[14] -
-                        FlatGrid[9] * FlatGrid[6] * FlatGrid[15] +
-                        FlatGrid[9] * FlatGrid[7] * FlatGrid[14] +
-                        FlatGrid[13] * FlatGrid[6] * FlatGrid[11] -
-                        FlatGrid[13] * FlatGrid[7] * FlatGrid[10];
+            result[0] = flatGrid[5] * flatGrid[10] * flatGrid[15] -
+                        flatGrid[5] * flatGrid[11] * flatGrid[14] -
+                        flatGrid[9] * flatGrid[6] * flatGrid[15] +
+                        flatGrid[9] * flatGrid[7] * flatGrid[14] +
+                        flatGrid[13] * flatGrid[6] * flatGrid[11] -
+                        flatGrid[13] * flatGrid[7] * flatGrid[10];
 
-            Result[4] = -FlatGrid[4] * FlatGrid[10] * FlatGrid[15] +
-                        FlatGrid[4] * FlatGrid[11] * FlatGrid[14] +
-                        FlatGrid[8] * FlatGrid[6] * FlatGrid[15] -
-                        FlatGrid[8] * FlatGrid[7] * FlatGrid[14] -
-                        FlatGrid[12] * FlatGrid[6] * FlatGrid[11] +
-                        FlatGrid[12] * FlatGrid[7] * FlatGrid[10];
+            result[4] = -flatGrid[4] * flatGrid[10] * flatGrid[15] +
+                        flatGrid[4] * flatGrid[11] * flatGrid[14] +
+                        flatGrid[8] * flatGrid[6] * flatGrid[15] -
+                        flatGrid[8] * flatGrid[7] * flatGrid[14] -
+                        flatGrid[12] * flatGrid[6] * flatGrid[11] +
+                        flatGrid[12] * flatGrid[7] * flatGrid[10];
 
-            Result[8] = FlatGrid[4] * FlatGrid[9] * FlatGrid[15] -
-                        FlatGrid[4] * FlatGrid[11] * FlatGrid[13] -
-                        FlatGrid[8] * FlatGrid[5] * FlatGrid[15] +
-                        FlatGrid[8] * FlatGrid[7] * FlatGrid[13] +
-                        FlatGrid[12] * FlatGrid[5] * FlatGrid[11] -
-                        FlatGrid[12] * FlatGrid[7] * FlatGrid[9];
+            result[8] = flatGrid[4] * flatGrid[9] * flatGrid[15] -
+                        flatGrid[4] * flatGrid[11] * flatGrid[13] -
+                        flatGrid[8] * flatGrid[5] * flatGrid[15] +
+                        flatGrid[8] * flatGrid[7] * flatGrid[13] +
+                        flatGrid[12] * flatGrid[5] * flatGrid[11] -
+                        flatGrid[12] * flatGrid[7] * flatGrid[9];
 
-            Result[12] = -FlatGrid[4] * FlatGrid[9] * FlatGrid[14] +
-                         FlatGrid[4] * FlatGrid[10] * FlatGrid[13] +
-                         FlatGrid[8] * FlatGrid[5] * FlatGrid[14] -
-                         FlatGrid[8] * FlatGrid[6] * FlatGrid[13] -
-                         FlatGrid[12] * FlatGrid[5] * FlatGrid[10] +
-                         FlatGrid[12] * FlatGrid[6] * FlatGrid[9];
+            result[12] = -flatGrid[4] * flatGrid[9] * flatGrid[14] +
+                         flatGrid[4] * flatGrid[10] * flatGrid[13] +
+                         flatGrid[8] * flatGrid[5] * flatGrid[14] -
+                         flatGrid[8] * flatGrid[6] * flatGrid[13] -
+                         flatGrid[12] * flatGrid[5] * flatGrid[10] +
+                         flatGrid[12] * flatGrid[6] * flatGrid[9];
 
-            Result[1] = -FlatGrid[1] * FlatGrid[10] * FlatGrid[15] +
-                        FlatGrid[1] * FlatGrid[11] * FlatGrid[14] +
-                        FlatGrid[9] * FlatGrid[2] * FlatGrid[15] -
-                        FlatGrid[9] * FlatGrid[3] * FlatGrid[14] -
-                        FlatGrid[13] * FlatGrid[2] * FlatGrid[11] +
-                        FlatGrid[13] * FlatGrid[3] * FlatGrid[10];
+            result[1] = -flatGrid[1] * flatGrid[10] * flatGrid[15] +
+                        flatGrid[1] * flatGrid[11] * flatGrid[14] +
+                        flatGrid[9] * flatGrid[2] * flatGrid[15] -
+                        flatGrid[9] * flatGrid[3] * flatGrid[14] -
+                        flatGrid[13] * flatGrid[2] * flatGrid[11] +
+                        flatGrid[13] * flatGrid[3] * flatGrid[10];
 
-            Result[5] = FlatGrid[0] * FlatGrid[10] * FlatGrid[15] -
-                        FlatGrid[0] * FlatGrid[11] * FlatGrid[14] -
-                        FlatGrid[8] * FlatGrid[2] * FlatGrid[15] +
-                        FlatGrid[8] * FlatGrid[3] * FlatGrid[14] +
-                        FlatGrid[12] * FlatGrid[2] * FlatGrid[11] -
-                        FlatGrid[12] * FlatGrid[3] * FlatGrid[10];
+            result[5] = flatGrid[0] * flatGrid[10] * flatGrid[15] -
+                        flatGrid[0] * flatGrid[11] * flatGrid[14] -
+                        flatGrid[8] * flatGrid[2] * flatGrid[15] +
+                        flatGrid[8] * flatGrid[3] * flatGrid[14] +
+                        flatGrid[12] * flatGrid[2] * flatGrid[11] -
+                        flatGrid[12] * flatGrid[3] * flatGrid[10];
 
-            Result[9] = -FlatGrid[0] * FlatGrid[9] * FlatGrid[15] +
-                        FlatGrid[0] * FlatGrid[11] * FlatGrid[13] +
-                        FlatGrid[8] * FlatGrid[1] * FlatGrid[15] -
-                        FlatGrid[8] * FlatGrid[3] * FlatGrid[13] -
-                        FlatGrid[12] * FlatGrid[1] * FlatGrid[11] +
-                        FlatGrid[12] * FlatGrid[3] * FlatGrid[9];
+            result[9] = -flatGrid[0] * flatGrid[9] * flatGrid[15] +
+                        flatGrid[0] * flatGrid[11] * flatGrid[13] +
+                        flatGrid[8] * flatGrid[1] * flatGrid[15] -
+                        flatGrid[8] * flatGrid[3] * flatGrid[13] -
+                        flatGrid[12] * flatGrid[1] * flatGrid[11] +
+                        flatGrid[12] * flatGrid[3] * flatGrid[9];
 
-            Result[13] = FlatGrid[0] * FlatGrid[9] * FlatGrid[14] -
-                         FlatGrid[0] * FlatGrid[10] * FlatGrid[13] -
-                         FlatGrid[8] * FlatGrid[1] * FlatGrid[14] +
-                         FlatGrid[8] * FlatGrid[2] * FlatGrid[13] +
-                         FlatGrid[12] * FlatGrid[1] * FlatGrid[10] -
-                         FlatGrid[12] * FlatGrid[2] * FlatGrid[9];
+            result[13] = flatGrid[0] * flatGrid[9] * flatGrid[14] -
+                         flatGrid[0] * flatGrid[10] * flatGrid[13] -
+                         flatGrid[8] * flatGrid[1] * flatGrid[14] +
+                         flatGrid[8] * flatGrid[2] * flatGrid[13] +
+                         flatGrid[12] * flatGrid[1] * flatGrid[10] -
+                         flatGrid[12] * flatGrid[2] * flatGrid[9];
 
-            Result[2] = FlatGrid[1] * FlatGrid[6] * FlatGrid[15] -
-                        FlatGrid[1] * FlatGrid[7] * FlatGrid[14] -
-                        FlatGrid[5] * FlatGrid[2] * FlatGrid[15] +
-                        FlatGrid[5] * FlatGrid[3] * FlatGrid[14] +
-                        FlatGrid[13] * FlatGrid[2] * FlatGrid[7] -
-                        FlatGrid[13] * FlatGrid[3] * FlatGrid[6];
+            result[2] = flatGrid[1] * flatGrid[6] * flatGrid[15] -
+                        flatGrid[1] * flatGrid[7] * flatGrid[14] -
+                        flatGrid[5] * flatGrid[2] * flatGrid[15] +
+                        flatGrid[5] * flatGrid[3] * flatGrid[14] +
+                        flatGrid[13] * flatGrid[2] * flatGrid[7] -
+                        flatGrid[13] * flatGrid[3] * flatGrid[6];
 
-            Result[6] = -FlatGrid[0] * FlatGrid[6] * FlatGrid[15] +
-                        FlatGrid[0] * FlatGrid[7] * FlatGrid[14] +
-                        FlatGrid[4] * FlatGrid[2] * FlatGrid[15] -
-                        FlatGrid[4] * FlatGrid[3] * FlatGrid[14] -
-                        FlatGrid[12] * FlatGrid[2] * FlatGrid[7] +
-                        FlatGrid[12] * FlatGrid[3] * FlatGrid[6];
+            result[6] = -flatGrid[0] * flatGrid[6] * flatGrid[15] +
+                        flatGrid[0] * flatGrid[7] * flatGrid[14] +
+                        flatGrid[4] * flatGrid[2] * flatGrid[15] -
+                        flatGrid[4] * flatGrid[3] * flatGrid[14] -
+                        flatGrid[12] * flatGrid[2] * flatGrid[7] +
+                        flatGrid[12] * flatGrid[3] * flatGrid[6];
 
-            Result[10] = FlatGrid[0] * FlatGrid[5] * FlatGrid[15] -
-                         FlatGrid[0] * FlatGrid[7] * FlatGrid[13] -
-                         FlatGrid[4] * FlatGrid[1] * FlatGrid[15] +
-                         FlatGrid[4] * FlatGrid[3] * FlatGrid[13] +
-                         FlatGrid[12] * FlatGrid[1] * FlatGrid[7] -
-                         FlatGrid[12] * FlatGrid[3] * FlatGrid[5];
+            result[10] = flatGrid[0] * flatGrid[5] * flatGrid[15] -
+                         flatGrid[0] * flatGrid[7] * flatGrid[13] -
+                         flatGrid[4] * flatGrid[1] * flatGrid[15] +
+                         flatGrid[4] * flatGrid[3] * flatGrid[13] +
+                         flatGrid[12] * flatGrid[1] * flatGrid[7] -
+                         flatGrid[12] * flatGrid[3] * flatGrid[5];
 
-            Result[14] = -FlatGrid[0] * FlatGrid[5] * FlatGrid[14] +
-                         FlatGrid[0] * FlatGrid[6] * FlatGrid[13] +
-                         FlatGrid[4] * FlatGrid[1] * FlatGrid[14] -
-                         FlatGrid[4] * FlatGrid[2] * FlatGrid[13] -
-                         FlatGrid[12] * FlatGrid[1] * FlatGrid[6] +
-                         FlatGrid[12] * FlatGrid[2] * FlatGrid[5];
+            result[14] = -flatGrid[0] * flatGrid[5] * flatGrid[14] +
+                         flatGrid[0] * flatGrid[6] * flatGrid[13] +
+                         flatGrid[4] * flatGrid[1] * flatGrid[14] -
+                         flatGrid[4] * flatGrid[2] * flatGrid[13] -
+                         flatGrid[12] * flatGrid[1] * flatGrid[6] +
+                         flatGrid[12] * flatGrid[2] * flatGrid[5];
 
-            Result[3] = -FlatGrid[1] * FlatGrid[6] * FlatGrid[11] +
-                        FlatGrid[1] * FlatGrid[7] * FlatGrid[10] +
-                        FlatGrid[5] * FlatGrid[2] * FlatGrid[11] -
-                        FlatGrid[5] * FlatGrid[3] * FlatGrid[10] -
-                        FlatGrid[9] * FlatGrid[2] * FlatGrid[7] +
-                        FlatGrid[9] * FlatGrid[3] * FlatGrid[6];
+            result[3] = -flatGrid[1] * flatGrid[6] * flatGrid[11] +
+                        flatGrid[1] * flatGrid[7] * flatGrid[10] +
+                        flatGrid[5] * flatGrid[2] * flatGrid[11] -
+                        flatGrid[5] * flatGrid[3] * flatGrid[10] -
+                        flatGrid[9] * flatGrid[2] * flatGrid[7] +
+                        flatGrid[9] * flatGrid[3] * flatGrid[6];
 
-            Result[7] = FlatGrid[0] * FlatGrid[6] * FlatGrid[11] -
-                        FlatGrid[0] * FlatGrid[7] * FlatGrid[10] -
-                        FlatGrid[4] * FlatGrid[2] * FlatGrid[11] +
-                        FlatGrid[4] * FlatGrid[3] * FlatGrid[10] +
-                        FlatGrid[8] * FlatGrid[2] * FlatGrid[7] -
-                        FlatGrid[8] * FlatGrid[3] * FlatGrid[6];
+            result[7] = flatGrid[0] * flatGrid[6] * flatGrid[11] -
+                        flatGrid[0] * flatGrid[7] * flatGrid[10] -
+                        flatGrid[4] * flatGrid[2] * flatGrid[11] +
+                        flatGrid[4] * flatGrid[3] * flatGrid[10] +
+                        flatGrid[8] * flatGrid[2] * flatGrid[7] -
+                        flatGrid[8] * flatGrid[3] * flatGrid[6];
 
-            Result[11] = -FlatGrid[0] * FlatGrid[5] * FlatGrid[11] +
-                         FlatGrid[0] * FlatGrid[7] * FlatGrid[9] +
-                         FlatGrid[4] * FlatGrid[1] * FlatGrid[11] -
-                         FlatGrid[4] * FlatGrid[3] * FlatGrid[9] -
-                         FlatGrid[8] * FlatGrid[1] * FlatGrid[7] +
-                         FlatGrid[8] * FlatGrid[3] * FlatGrid[5];
+            result[11] = -flatGrid[0] * flatGrid[5] * flatGrid[11] +
+                         flatGrid[0] * flatGrid[7] * flatGrid[9] +
+                         flatGrid[4] * flatGrid[1] * flatGrid[11] -
+                         flatGrid[4] * flatGrid[3] * flatGrid[9] -
+                         flatGrid[8] * flatGrid[1] * flatGrid[7] +
+                         flatGrid[8] * flatGrid[3] * flatGrid[5];
 
-            Result[15] = FlatGrid[0] * FlatGrid[5] * FlatGrid[10] -
-                         FlatGrid[0] * FlatGrid[6] * FlatGrid[9] -
-                         FlatGrid[4] * FlatGrid[1] * FlatGrid[10] +
-                         FlatGrid[4] * FlatGrid[2] * FlatGrid[9] +
-                         FlatGrid[8] * FlatGrid[1] * FlatGrid[6] -
-                         FlatGrid[8] * FlatGrid[2] * FlatGrid[5];
+            result[15] = flatGrid[0] * flatGrid[5] * flatGrid[10] -
+                         flatGrid[0] * flatGrid[6] * flatGrid[9] -
+                         flatGrid[4] * flatGrid[1] * flatGrid[10] +
+                         flatGrid[4] * flatGrid[2] * flatGrid[9] +
+                         flatGrid[8] * flatGrid[1] * flatGrid[6] -
+                         flatGrid[8] * flatGrid[2] * flatGrid[5];
 
 
-            float Det = this->Det();
+            float det = this->Det();
 
-            if (Det == 0)
+            if (det == 0)
                 return TMat4<T>(0);
 
-            TMat4<T> FinalResult(0);
+            TMat4<T> finalResult(0);
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; ++j) {
-                    FinalResult.Grid[i][j] = Result[i * 4 + j] / Det;
+                    finalResult.grid[i][j] = result[i * 4 + j] / det;
                 }
             }
 
-            return FinalResult;
+            return finalResult;
         }
 
         friend std::ostream &operator<<(std::ostream &os, const TMat4 &mat4) {
             for (int i = 0; i < 4; ++i) {
                 os << "[ ";
                 for (int j = 0; j < 4; ++j) {
-                    os << mat4.Grid[j][i] << " ";
+                    os << mat4.grid[j][i] << " ";
                 }
                 os << "]" << "\n";
             }
