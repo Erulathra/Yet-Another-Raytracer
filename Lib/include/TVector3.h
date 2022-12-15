@@ -34,6 +34,9 @@ namespace SG
         double Length()
         { return std::sqrt(x * x + y * y + z * z); }
 
+        double SquaredLength()
+        { return x * x + y * y + z * z; }
+
         TVector3 Normal()
         {
             double length = this->Length();
