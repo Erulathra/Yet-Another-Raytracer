@@ -20,7 +20,7 @@ namespace SG {
         }
 
         friend std::ostream& operator<<(std::ostream& os, const TLine& line) {
-            os << line.vector << " + " << line.point << "t";
+            os << line.point << " + " << line.vector << "t";
             return os;
         }
     };
@@ -48,17 +48,23 @@ namespace SG {
         TVector3<T> normalVector;
         TVector3<T> point;
 
-        static TPlane<T> FromGeneral(T a, T b, T c, T w) {
+        T a;
+        T b;
+        T c;
+        T d;
+
+        static TPlane<T> FromGeneral(T a, T b, T c, T d)
+        {
             TVector3<T> foundNormalVector = {a, b, c};
             TVector3<T> point;
 
             if (c != 0) {
-                point = {0, 0, -w / c};
+                point = {0, 0, -d / c};
             } else if (b != 0) {
-                point = {0, -w / b, c};
+                point = {0, -d / b, c};
             }
 
-            return TPlane{foundNormalVector, point};
+            return TPlane{foundNormalVector, point, a, b, c, d};
         }
     };
 
@@ -94,21 +100,20 @@ namespace SG {
         static TVector3 <T> FindIntersection(TLine<T> line, TPlane <T> plane) {
             T distance = plane.normalVector.Dot(plane.point) * -1.f;
             T t = -(line.point.Dot(plane.normalVector) + distance) / line.vector.Dot(plane.normalVector);
-            return line.point + (plane.normalVector * t);
+            return line.point + (line.vector * t);
         }
 
         static TLine<T> FindIntersection(TPlane <T> planeOne, TPlane <T> planeTwo) {
-            TVector3 < T > thirdPlaneNormal = planeOne.normalVector.Cross(planeTwo.normalVector);
-            T det = thirdPlaneNormal.SquaredLength();
+            TLine<T> result;
+            result.vector = planeOne.normalVector.Cross(planeTwo.normalVector);
+            T directionLength = result.vector.SquaredLength();
 
-            if (det == 0.f)
+            if (directionLength == 0.f)
                 throw NoIntersectionException();
 
-            TLine<T> result;
-            result.point = ((thirdPlaneNormal.Cross(planeTwo.normalVector).Dot(planeOne.point))
-                            + (planeOne.normalVector.Cross(thirdPlaneNormal).Dot(planeTwo.point))) / det;
-            result.vector = thirdPlaneNormal;
-            return result;
+            result.point = (result.vector.Cross(planeTwo.normalVector) * planeOne.d +
+                    planeOne.normalVector.Cross(result.vector) * planeTwo.d) / directionLength;
+            return  result;
         }
 
         static T FindAngle(TLine<T> line, TPlane <T> plane) {
