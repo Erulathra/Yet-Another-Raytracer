@@ -3,6 +3,7 @@
 #include "TVector3.h"
 #include <cmath>
 #include <ostream>
+#include <vector>
 
 namespace SG {
     class NoIntersectionException : std::exception {
@@ -148,6 +149,19 @@ namespace SG {
             T solutionTwo = (-b + std::sqrt(delta)) / (2. * a);
 
             return {line.point + line.vector * solutionOne, line.point + line.vector * solutionTwo};
+        }
+
+        static bool IsRayIntersectAABBUnitBox(TLine<T> line){
+            TVector3<T> boxMin(-1);
+            TVector3<T> boxMax(1);
+
+            TVector3<T> tMin = (boxMin - line.point) / line.vector;
+            TVector3<T> tMax = (boxMax - line.point) / line.vector;
+            TVector3<T> t1 = TVector3<T>::min(tMin, tMax);
+            TVector3<T> t2 = TVector3<T>::max(tMin, tMax);
+            double tNear = std::max(std::max(t1.x, t1.y), t1.z);
+            double tFar = std::min(std::min(t2.x, t2.y), t2.z);
+            return tFar > tNear;
         }
     };
 }

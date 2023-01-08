@@ -31,7 +31,7 @@ namespace SG
 
         TVector3(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
 
-        double Length()
+        double Length() const
         { return std::sqrt(x * x + y * y + z * z); }
 
         double SquaredLength()
@@ -41,7 +41,7 @@ namespace SG
         {
             double length = this->Length();
             if (length == 0)
-                throw DivisionByZeroException();
+                return TVector3<T>(0.);
 
             return *this / length;
         }
@@ -132,6 +132,23 @@ namespace SG
             return result;
         }
 
+        TVector3 operator/(TVector3<T> const& vector3)
+        {
+            TVector3<T> newVector = vector3;
+            if (newVector.x == 0)
+                newVector.x == 1;
+            if (newVector.y == 0)
+                newVector.y == 1;
+            if (newVector.z == 0)
+                newVector.z == 1;
+
+            TVector3 result;
+            result.x = this->x / newVector.x;
+            result.y = this->y / newVector.y;
+            result.z = this->z / newVector.z;
+            return result;
+        }
+
         void operator*=(T const& scalar)
         { *this = *this * scalar; }
 
@@ -148,7 +165,7 @@ namespace SG
 
         bool operator<(const TVector3& rhs) const
         {
-            return this->Length() < rhs.Lenght();
+            return this->Length() < rhs.Length();
         }
 
         bool operator>(const TVector3& rhs) const
@@ -171,6 +188,22 @@ namespace SG
             std::ostringstream result;
             result << *this;
             return result.str();
+        }
+
+        static TVector3<T> min(TVector3<T> a, TVector3<T> b) {
+            TVector3<T> result;
+            result.x = std::min(a.x, b.x);
+            result.y = std::min(a.y, b.y);
+            result.z = std::min(a.z, b.z);
+            return result;
+        }
+
+        static TVector3<T> max(TVector3<T> a, TVector3<T> b) {
+            TVector3<T> result;
+            result.x = std::max(a.x, b.x);
+            result.y = std::max(a.y, b.y);
+            result.z = std::max(a.z, b.z);
+            return result;
         }
     };
 
