@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include <cmath>
 #include <iostream>
+#include "cpp-terminal/base.hpp"
 
 int main(int argc, char *argv[]) {
     SG::Renderer renderer;
