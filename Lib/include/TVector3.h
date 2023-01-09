@@ -46,6 +46,10 @@ namespace SG
             return *this / length;
         }
 
+        bool IsNear(TVector3 vector3, double error) {
+            return std::abs(this->Length() - vector3.Length()) < error;
+        }
+
         double Dot(TVector3 rhs)
         { return x * rhs.x + y * rhs.y + z * rhs.z; }
 

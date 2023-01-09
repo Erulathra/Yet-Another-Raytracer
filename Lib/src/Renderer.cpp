@@ -30,7 +30,15 @@ namespace SG {
         double screenDistance = 1.f;
 
         TVector3<double> screenPosition = cameraPosition + cameraDirection * screenDistance;
-        TVector3<double> screenLeft = -(screenPosition - cameraPosition).Cross(TVector3<double>(0., 1., 0.)).Normal();
+
+        TVector3<double> worldUp{0., 1., 0.};
+
+        if (cameraDirection.IsNear(TVector3<double>{0, 1, 0}, 0.1)
+        || cameraDirection.IsNear(TVector3<double>{0, 1, 0}, 0.1)) {
+            worldUp = TVector3<double>(0., 0., 1.);
+        }
+
+        TVector3<double> screenLeft = -(screenPosition - cameraPosition).Cross(worldUp).Normal();
         TVector3<double> screenDown = screenPosition.Cross(screenLeft).Normal();
 
         for (int i = 0; i < 60; ++i) {
