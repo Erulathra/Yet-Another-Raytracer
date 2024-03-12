@@ -1,7 +1,6 @@
 #include "Renderer.h"
 #include "iostream"
 #include "TLinearMath.h"
-#include "cpp-terminal/base.hpp"
 
 namespace SG {
     Renderer::Renderer() {
@@ -17,12 +16,12 @@ namespace SG {
             for (int j = 0; j < 60; ++j) {
                 if (pixels[i][j])
                 {
-                    std::cout << Term::color_bg(Term::Color4::MAGENTA_BRIGHT)  << "0";
+                    std::cout << "0";
                 } else {
-                    std::cout << Term::color_bg(Term::Color4::WHITE_BRIGHT) << ".";
+                    std::cout << ".";
                 }
             }
-            std::cout << Term::color_bg(Term::Color4::DEFAULT) << std::endl;
+            std::cout << std::endl;
         }
     }
 

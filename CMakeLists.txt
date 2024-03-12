@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.5)
 
-set(CXX_STANDARD 23)
+set(CXX_STANDARD 20)
 
 project(S1NU5_Graphics)
 
