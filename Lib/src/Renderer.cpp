@@ -2,7 +2,7 @@
 #include "iostream"
 #include "LinearMath.h"
 
-namespace SG {
+namespace YAR {
     Renderer::Renderer() {
         for( std::array<bool, 60>& column : pixels) {
             for (bool& pixel: column) {

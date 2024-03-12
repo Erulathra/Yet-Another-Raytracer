@@ -1,4 +1,4 @@
-project(S1NU5-Graphics)
+project(Yet-Another-Raytracer)
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES

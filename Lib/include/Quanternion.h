@@ -2,7 +2,7 @@
 
 #include "Vector3.h"
 
-namespace SG
+namespace YAR
 {
     class Quanternion
     {

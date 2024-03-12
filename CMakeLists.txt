@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.5)
 
 set(CXX_STANDARD 20)
 
-project(S1NU5_Graphics)
+project(Yet-Another-Raytracer)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)

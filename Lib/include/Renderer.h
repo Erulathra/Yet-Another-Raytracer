@@ -3,9 +3,9 @@
 #include <array>
 #include "Vector3.h"
 
-using namespace SG;
+using namespace YAR;
 
-namespace SG {
+namespace YAR {
 
     class Renderer {
     private:

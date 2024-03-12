@@ -4,7 +4,7 @@
 #include "spdlog/spdlog.h"
 
 int main(int argc, char* argv[]) {
-    SG::Renderer renderer;
+    YAR::Renderer renderer;
 
     double yaw = 30.;
     double pitch = 30.;

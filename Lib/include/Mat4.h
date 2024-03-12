@@ -7,7 +7,7 @@
 
 #include "Defines.h"
 
-namespace SG {
+namespace YAR {
 
     class Mat4 {
     private:

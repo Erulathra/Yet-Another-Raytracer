@@ -1,5 +1,5 @@
 #pragma once
 
-namespace SG {
+namespace YAR {
     typedef double flt;
 }

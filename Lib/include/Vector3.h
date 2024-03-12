@@ -6,7 +6,7 @@
 #include <string>
 #include "Defines.h"
 
-namespace SG
+namespace YAR
 {
     class Vector3
     {
