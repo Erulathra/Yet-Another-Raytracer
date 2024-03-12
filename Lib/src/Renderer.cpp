@@ -1,6 +1,6 @@
 #include "Renderer.h"
 #include "iostream"
-#include "TLinearMath.h"
+#include "LinearMath.h"
 
 namespace SG {
     Renderer::Renderer() {
@@ -11,7 +11,7 @@ namespace SG {
         }
     }
 
-    void Renderer::Draw() {
+    void Renderer::Draw() const {
         for (int i = 0; i < 60; ++i) {
             for (int j = 0; j < 60; ++j) {
                 if (pixels[i][j])
@@ -25,29 +25,31 @@ namespace SG {
         }
     }
 
-    void Renderer::RayCast(TVector3<double> cameraPosition, TVector3<double> cameraDirection) {
-        double pixelSize = 1. / 60.;
-        double screenDistance = 1.f;
+    void Renderer::RayCast(const Vector3& cameraPosition, const Vector3& cameraDirection) {
+        const double pixelSize = 1. / 60.;
+        const double screenDistance = 1.f;
 
-        TVector3<double> screenPosition = cameraPosition + cameraDirection * screenDistance;
+        const Vector3 screenPosition = cameraPosition + cameraDirection * screenDistance;
 
-        TVector3<double> worldUp{0., 1., 0.};
+        Vector3 worldUp{0., 1., 0.};
 
-        if (cameraDirection.IsNear(TVector3<double>{0, 1, 0}, 0.1)
-        || cameraDirection.IsNear(TVector3<double>{0, 1, 0}, 0.1)) {
-            worldUp = TVector3<double>(0., 0., 1.);
+        if (cameraDirection.IsNear(Vector3{0, 1, 0}, 0.1)
+        || cameraDirection.IsNear(Vector3{0, 1, 0}, 0.1)) {
+            worldUp = Vector3(0., 0., 1.);
         }
 
-        TVector3<double> screenLeft = -(screenPosition - cameraPosition).Cross(worldUp).Normal();
-        TVector3<double> screenDown = screenPosition.Cross(screenLeft).Normal();
+        const Vector3 screenLeft = -(screenPosition - cameraPosition).Cross(worldUp).Normal();
+        const Vector3 screenDown = screenPosition.Cross(screenLeft).Normal();
 
         for (int i = 0; i < 60; ++i) {
             for (int j = 0; j < 60; ++j) {
-                TVector3<double> pixelLocation = screenPosition + ((j - 30) * pixelSize) * screenLeft;
+                Vector3 pixelLocation = screenPosition + ((j - 30) * pixelSize) * screenLeft;
                 pixelLocation = pixelLocation + ((i - 30) * pixelSize) * screenDown;
 
-                TLine line = TLine<double>::FromTwoPoints(cameraPosition, pixelLocation);
-                pixels[i][j] = TLinearMath<double>::IsRayIntersectAABBUnitBox(line);
+                Ray ray = Ray::FromTwoPoints(cameraPosition, pixelLocation);
+                Sphere sphere {{0.f}, 1.f};
+                std::vector<Vector3> result;
+                pixels[i][j] = LinearMath::FindIntersection(ray, sphere, result);
             }
         }
     }

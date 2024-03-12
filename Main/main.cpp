@@ -17,15 +17,15 @@ int main(int argc, char* argv[]) {
     else if (pitch < 0.)
         pitch += 360.;
 
-    TVector3<double> cameraPosition(0.f);
+    Vector3 cameraPosition(0.f);
 
-    double pitchRadians = pitch * M_PI / 180.;
-    double yawRadians = yaw * M_PI / 180.;
+    const double pitchRadians = pitch * M_PI / 180.;
+    const double yawRadians = yaw * M_PI / 180.;
     cameraPosition.x = radius * std::cos(pitchRadians) * std::cos(yawRadians);
     cameraPosition.y = radius * std::sin(pitchRadians) * std::cos(yawRadians);
     cameraPosition.z = radius * std::sin(yawRadians);
 
-    TVector3<double> cameraDirection = (-cameraPosition).Normal();
+    Vector3 cameraDirection = (-cameraPosition).Normal();
 
     renderer.RayCast(cameraPosition, cameraDirection);
     renderer.Draw();

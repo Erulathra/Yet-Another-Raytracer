@@ -5,19 +5,21 @@
 #include <ostream>
 #include <cmath>
 
-namespace SG {
-    template<typename T>
-    class TMat4 {
-    private:
-        static const uint8_t GRID_SIZE_X = 4;
-        static const uint8_t GRID_SIZE_Y = 4;
+#include "Defines.h"
 
-        std::array<std::array<T, 4>, 4> grid;
+namespace SG {
+
+    class Mat4 {
+    private:
+        static constexpr uint8_t GRID_SIZE_X = 4;
+        static constexpr uint8_t GRID_SIZE_Y = 4;
+
+        std::array<std::array<flt, 4>, 4> grid{};
 
     public:
-        TMat4() : TMat4(0) {}
+        Mat4() : Mat4(0) {}
 
-        explicit TMat4(T x) {
+        explicit Mat4(flt x) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     if (i == j)
@@ -28,7 +30,7 @@ namespace SG {
             }
         }
 
-        TMat4(TMat4<T> &clone) {
+        Mat4(const Mat4& clone) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     grid[i][j] = clone.grid[i][j];
@@ -36,12 +38,12 @@ namespace SG {
             }
         }
 
-        T &operator[](std::pair<int, int> coordinates) {
+        flt &operator[](const std::pair<int, int>& coordinates) {
             return grid[coordinates.first][coordinates.second];
         }
 
-        TMat4<T> operator-() {
-            TMat4<T> result(0);
+        Mat4 operator-() const {
+            Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     result.grid[i][j] = -this->grid[i][j];
@@ -50,8 +52,8 @@ namespace SG {
             return result;
         }
 
-        TMat4<T> operator+(TMat4<T> another) {
-            TMat4<T> result(0);
+        Mat4 operator+(const Mat4& another) const {
+            Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     result.grid[i][j] = grid[i][j] + another.grid[i][j];
@@ -61,8 +63,8 @@ namespace SG {
             return result;
         }
 
-        TMat4<T> operator-(TMat4<T> another) {
-            TMat4<T> result(0);
+        Mat4 operator-(const Mat4& another) const {
+            Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     result.grid[i][j] = grid[i][j] - another.grid[i][j];
@@ -72,34 +74,37 @@ namespace SG {
             return result;
         }
 
-        TMat4<T> &operator=(TMat4<T> another) {
+        Mat4& operator=(const Mat4& another) {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     grid[i][j] = another.grid[i][j];
                 }
             }
+
+            return *this;
         }
 
-        bool operator==(TMat4<T> another) {
+        bool operator==(const Mat4& another) const {
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     if(grid[i][j] != another.grid[i][j])
                         return false;
                 }
             }
+
             return true;
         }
 
-        void operator+=(TMat4<T> another) {
+        void operator+=(const Mat4& another) {
             *this = *this + another;
         }
 
-        void operator-=(TMat4<T> another) {
+        void operator-=(const Mat4& another) {
             *this = *this - another;
         }
 
-        TMat4<T> operator*(T scalar) {
-            TMat4<T> result(0);
+        Mat4 operator*(const flt scalar) const {
+            Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     result.grid[i][j] = scalar * grid[i][j];
@@ -108,12 +113,12 @@ namespace SG {
             return result;
         }
 
-        void operator*=(T scalar) {
+        void operator*=(flt scalar) {
             *this = *this * scalar;
         }
 
-        TMat4<T> operator*(TMat4<T> another) {
-            TMat4<T> result(0);
+        Mat4 operator*(Mat4 another) const {
+            Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
                     for (int k = 0; k < GRID_SIZE_X; ++k) {
@@ -125,12 +130,12 @@ namespace SG {
             return result;
         }
 
-        void operator*=(TMat4<T> Another) {
+        void operator*=(const Mat4& Another) {
             *this = *this * Another;
         }
 
-        TMat4<T> Transpose() {
-            TMat4<T> result(0);
+        Mat4 Transpose() const {
+            Mat4 result(0);
 
             for (int i = 0; i < GRID_SIZE_X; i++) {
                 for (int j = 0; j < GRID_SIZE_Y; j++) {
@@ -140,14 +145,14 @@ namespace SG {
             return result;
         }
 
-        double Det() {
-            double Coefficient, result = 1;
-            TMat4<T> helper(*this);
+        flt Det() const {
+            flt result = 1;
+            Mat4 helper(*this);
             for (int i = 0; i < 4; i++) {
                 for (int k = i + 1; k < 4; k++) {
-                    Coefficient = helper.grid[k][i] / helper.grid[i][i];
+                    const flt coefficient = helper.grid[k][i] / helper.grid[i][i];
                     for (int j = i; j < 4; j++)
-                        helper.grid[k][j] = helper.grid[k][j] - Coefficient * helper.grid[i][j];
+                        helper.grid[k][j] = helper.grid[k][j] - coefficient * helper.grid[i][j];
                 }
             }
             for (int i = 0; i < 4; i++)
@@ -155,9 +160,9 @@ namespace SG {
             return result;
         }
 
-        TMat4<T> Inverse() {
-            std::array<T, 16> result;
-            std::array<T, 16> flatGrid;
+        Mat4 Inverse() {
+            std::array<flt, 16> result{};
+            std::array<flt, 16> flatGrid{};
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; ++j) {
@@ -278,12 +283,12 @@ namespace SG {
                          flatGrid[8] * flatGrid[2] * flatGrid[5];
 
 
-            float det = this->Det();
+            const float det = this->Det();
 
             if (det == 0)
-                return TMat4<T>(0);
+                return Mat4(0);
 
-            TMat4<T> finalResult(0);
+            Mat4 finalResult(0);
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; ++j) {
                     finalResult.grid[i][j] = result[i * 4 + j] / det;
@@ -293,7 +298,7 @@ namespace SG {
             return finalResult;
         }
 
-        friend std::ostream &operator<<(std::ostream &os, const TMat4 &mat4) {
+        friend std::ostream &operator<<(std::ostream &os, const Mat4 &mat4) {
             for (int i = 0; i < 4; ++i) {
                 os << "[ ";
                 for (int j = 0; j < 4; ++j) {
@@ -304,8 +309,8 @@ namespace SG {
             return os;
         }
 
-        static TMat4<T> Translation(T x, T y, T z) {
-            TMat4<T> Result(1);
+        static Mat4 Translation(flt x, flt y, flt z) {
+            Mat4 Result(1);
 
             Result[{3, 0}] = x;
             Result[{3, 1}] = y;
@@ -313,9 +318,9 @@ namespace SG {
             return  Result;
         }
 
-        static TMat4<T> Scale(T x, T y, T z)
+        static Mat4 Scale(flt x, flt y, flt z)
         {
-            TMat4<T> Result(1);
+            Mat4 Result(1);
 
             Result[{0, 0}] = x;
             Result[{1, 1}] = y;
@@ -323,9 +328,9 @@ namespace SG {
             return  Result;
         }
 
-        static TMat4<T> RotationX(T radians)
+        static Mat4 RotationX(flt radians)
         {
-            TMat4<T> Result(1);
+            Mat4 Result(1);
 
             Result[{1, 1}] = std::cos(radians);
             Result[{2, 1}] = -std::sin(radians);
@@ -334,9 +339,9 @@ namespace SG {
             return  Result;
         }
 
-        static TMat4<T> RotationY(T radians)
+        static Mat4 RotationY(flt radians)
         {
-            TMat4<T> Result(1);
+            Mat4 Result(1);
 
             Result[{0, 0}] = std::cos(radians);
             Result[{0, 2}] = std::sin(radians);
@@ -345,9 +350,9 @@ namespace SG {
             return  Result;
         }
 
-        static TMat4<T> RotationZ(T radians)
+        static Mat4 RotationZ(flt radians)
         {
-            TMat4<T> Result(1);
+            Mat4 Result(1);
 
             Result[{0, 0}] = std::cos(radians);
             Result[{0, 1}] = -std::sin(radians);

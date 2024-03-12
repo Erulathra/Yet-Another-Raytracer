@@ -1,25 +1,22 @@
 #pragma once
 
-#include "TVector3.h"
+#include "Vector3.h"
 
 namespace SG
 {
-    template <typename T>
-    class TQuanternion
+    class Quanternion
     {
     private:
-        T scalar;
-        TVector3<T> vector;
+        flt scalar;
+        Vector3 vector;
 
-        TQuanternion() {};
+        Quanternion()
+        : scalar(0) { }
     public:
-        TQuanternion(T a, T i, T j, T k)
-            : scalar(a), vector(i, j, k) {}
+        Quanternion(flt a, flt i, flt j, flt k) : scalar(a), vector(i, j, k) {}
+        Quanternion(flt a, Vector3 vector) : scalar(a), vector(vector) {}
 
-        TQuanternion(T a, TVector3<T> vector)
-            : scalar(a), vector(vector) {}
-
-        TQuanternion &operator=(TQuanternion const &another)
+        Quanternion &operator=(Quanternion const &another)
         {
             if (this == *another)
                 return *this;
@@ -30,7 +27,7 @@ namespace SG
             return *this;
         }
 
-        bool operator==(TQuanternion const &another)
+        bool operator==(Quanternion const &another)
         {
             if(this->Scalar == another.Scalar && this->Vector == another.Vector){
                 return true;
@@ -39,65 +36,65 @@ namespace SG
             return false;
         }
 
-        TQuanternion operator-()
+        Quanternion operator-()
         {
-            TQuanternion<T> result;
+            Quanternion<T> result;
             result.scalar = -this->scalar;
             result.vector = -this->vector;
             return result;
         }
 
-        TQuanternion operator+(TQuanternion const &another)
+        Quanternion operator+(Quanternion const &another)
         {
-            TQuanternion result;
+            Quanternion result;
             result.scalar = this->scalar + another.scalar;
             result.vector = this->vector + another.vector;
             return result;
         }
 
-        TQuanternion operator-(TQuanternion another)
+        Quanternion operator-(Quanternion another)
         {
             return *this + (-another);
         }
 
-        void operator+=(TQuanternion const &another)
+        void operator+=(Quanternion const &another)
         {
             this = this + another;
         }
 
-        void operator-=(TQuanternion const &another)
+        void operator-=(Quanternion const &another)
         {
             this = this - another;
         }
 
-        TQuanternion<T> operator*(TQuanternion<T> another)
+        Quanternion<T> operator*(Quanternion<T> another)
         {
-            TQuanternion result;
+            Quanternion result;
             result.scalar = this->scalar * another.scalar - this->vector.Dot(another.vector);
             result.vector = this->scalar * another.vector + another.scalar * this->vector +
                             this->vector.Cross(another.vector);
             return result;
         }
 
-        TQuanternion<T> operator*(double scalar)
+        Quanternion<T> operator*(double scalar)
         {
-            TQuanternion result;
+            Quanternion result;
             result.scalar = scalar * scalar;
             result.vector = scalar * vector;
             return result;
         }
 
-        friend TQuanternion<T> operator*(T scalar, TQuanternion<T> Quanternion)
+        friend Quanternion<T> operator*(T scalar, Quanternion<T> Quanternion)
         {
-            TQuanternion result;
+            Quanternion result;
             result.scalar = scalar * Quanternion.scalar;
             result.vector = scalar * Quanternion.vector;
             return result;
         }
 
-        TQuanternion<T> operator/(TQuanternion<T> another)
+        Quanternion<T> operator/(Quanternion<T> another)
         {
-            TQuanternion<T> result;
+            Quanternion<T> result;
             T factor = 1/(another.scalar * another.scalar + another.vector.Dot(another.vector));
             result.scalar = (scalar * another.scalar + vector.Dot(another.vector)) * factor;
             result.vector = factor * (-scalar * another.vector + another.scalar * vector - vector.Cross(another.vector));
@@ -105,30 +102,30 @@ namespace SG
             return result;
         }
         
-        void operator*=(TQuanternion const &another)
+        void operator*=(Quanternion const &another)
         {
             this = this * another;
         }
 
-        void operator/=(TQuanternion const &another)
+        void operator/=(Quanternion const &another)
         {
             this = this / another;
         }
         
-        static TQuanternion<T> GetRotationQuanternion(T Angle, TVector3<T> Axis)
+        static Quanternion<T> GetRotationQuanternion(T Angle, Vector3<T> Axis)
         {
             T factor = std::sin(Angle/2) * (1 / std::sqrt(Axis.x * Axis.x + Axis.y * Axis.y + Axis.z * Axis.z));
-            return TQuanternion<T>(std::cos(Angle/2), Axis * factor);
+            return Quanternion<T>(std::cos(Angle/2), Axis * factor);
         }
         
-        TVector3<T> Rotate(TVector3<T> vector)
+        Vector3<T> Rotate(Vector3<T> vector)
         {
             return 2. * this->vector.Dot(vector) * this->vector
                      + (scalar * scalar - this->vector.Dot(this->vector)) * vector
                      + 2. * scalar * this->vector.Cross(vector);
         }
 
-        friend std::ostream &operator<<(std::ostream &Os, const TQuanternion &Quanternion)
+        friend std::ostream &operator<<(std::ostream &Os, const Quanternion &Quanternion)
         {
             Os << "(" << Quanternion.scalar << " + " << Quanternion.vector << ")";
             return Os;
