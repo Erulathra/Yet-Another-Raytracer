@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "Vector3.h"
+#include "Math/Vector3.h"
 
 using namespace YAR;
 

@@ -2,7 +2,7 @@
 
 #include "Camera.h"
 #include "iostream"
-#include "LinearMath.h"
+#include "Math/LinearMath.h"
 
 namespace YAR {
     Renderer::Renderer() {

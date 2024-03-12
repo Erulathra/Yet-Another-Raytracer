@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Defines.h"
-#include "LinearMath.h"
+#include "Math/LinearMath.h"
 
 namespace YAR {
     class Camera {
