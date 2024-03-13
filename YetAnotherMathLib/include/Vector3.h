@@ -6,7 +6,7 @@
 #include <string>
 #include "Defines.h"
 
-namespace YAR
+namespace YAM
 {
     class Vector3
     {

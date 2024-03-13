@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-namespace YAR {
+namespace YAM {
     Ray OrthoCamera::GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) {
         const flt stepX = static_cast<flt>(orthoSizeX) / ResX;
         const flt stepY = static_cast<flt>(orthoSizeY) / ResY;

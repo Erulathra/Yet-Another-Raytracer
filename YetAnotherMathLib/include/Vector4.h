@@ -9,7 +9,7 @@
 #include "Mat4.h"
 #include "Vector3.h"
 
-namespace YAR
+namespace YAM
 {
     class Vector4
     {

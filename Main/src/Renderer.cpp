@@ -2,9 +2,9 @@
 
 #include "Camera.h"
 #include "iostream"
-#include "Math/LinearMath.h"
+#include "LinearMath.h"
 
-namespace YAR {
+namespace YAM {
     Renderer::Renderer() {
         for( std::array<bool, 60>& column : pixels) {
             for (bool& pixel: column) {

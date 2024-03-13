@@ -1,11 +1,9 @@
 #pragma once
 
 #include <array>
-#include "Math/Vector3.h"
+#include "Vector3.h"
 
-using namespace YAR;
-
-namespace YAR {
+namespace YAM {
 
     class Renderer {
     private:

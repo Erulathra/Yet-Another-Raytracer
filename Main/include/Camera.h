@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "Defines.h"
-#include "Math/LinearMath.h"
+#include "LinearMath.h"
 
-namespace YAR {
+namespace YAM {
     class Camera {
     protected:
         Vector3 position;

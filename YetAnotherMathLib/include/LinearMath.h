@@ -6,7 +6,7 @@
 #include <vector>
 
 
-namespace YAR {
+namespace YAM {
     struct Ray {
         Vector3 vector;
         Vector3 point;
