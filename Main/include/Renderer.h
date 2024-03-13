@@ -1,20 +1,26 @@
 #pragma once
 
-#include <array>
-#include "Vector3.h"
+#include <cstdint>
+#include <memory>
+#include <vector>
 
-namespace YAM {
+namespace YAR{
+    class Buffer;
+    class Camera;
+}
+
+namespace YAR {
 
     class Renderer {
     private:
-        std::array<std::array<bool, 60>, 60> pixels{};
+        std::unique_ptr<Buffer> colorBuffer;
 
     public:
-        Renderer();
+        Renderer(uint32_t sizeX, uint32_t sizeY);
+        ~Renderer();
 
-        void Draw() const;
-        void RayCast(const Vector3& cameraPosition, const Vector3& cameraDirection);
-
+        void Render(const Camera* camera) const;
+        void Save(const std::string& path) const;
     };
 
 } // SG

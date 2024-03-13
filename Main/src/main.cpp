@@ -1,15 +1,17 @@
+#include "Camera.h"
 #include "Renderer.h"
-#include <cmath>
-#include <iostream>
-#include "../../cmake-build-debug/_deps/spdlog-src/include/spdlog/spdlog.h"
+#include "Vector3.h"
 
 int main(int argc, char* argv[]) {
-    YAM::Renderer renderer;
+    YAR::Renderer renderer{256, 256};
 
     YAM::Vector3 cameraPosition(0.f, 0.f, -5.f);
     YAM::Vector3 cameraDirection (0.f, 0.f, 1.f);
     cameraDirection = cameraDirection.Normal();
 
-    renderer.RayCast(cameraPosition, cameraDirection);
-    renderer.Draw();
+    std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::OrthoCamera>(
+        256, 256, cameraPosition, cameraDirection, 5.f, 5.f);
+
+    renderer.Render(camera.get());
+    renderer.Save("output.tga");
 }

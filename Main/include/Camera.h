@@ -5,61 +5,58 @@
 #include "Defines.h"
 #include "LinearMath.h"
 
-namespace YAM {
+namespace YAR{
     class Camera {
     protected:
-        Vector3 position;
-        Vector3 direction;
+        YAM::Vector3 position;
+        YAM::Vector3 direction;
 
-        uint32_t ResX;
-        uint32_t ResY;
+        uint32_t resolutionX;
+        uint32_t resolutionY;
 
     public:
-        Camera(const Vector3& position, const Vector3& direction)
+        Camera(int32_t resolutionX, int32_t resolutionY,
+               const YAM::Vector3& position, const YAM::Vector3& direction)
             : position(position)
               , direction(direction)
-        , ResX(480)
-        , ResY(320) {
-        }
+              , resolutionX(resolutionX)
+              , resolutionY(resolutionY) {}
 
         virtual ~Camera() = default;
 
-        virtual Ray GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) = 0;
+        virtual YAM::Ray GetRay(uint32_t X, uint32_t Y) const = 0;
     };
 
-    class OrthoCamera : Camera {
+    class OrthoCamera : public Camera {
         flt orthoSizeX;
         flt orthoSizeY;
-    public:
-        OrthoCamera(const Vector3& position, const Vector3& direction, flt orthoSizeX, flt orthoSizeY)
-            : Camera(position, direction)
-              , orthoSizeX(orthoSizeX)
-              , orthoSizeY(orthoSizeY) {
-        }
 
-        Ray GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) override;
+    public:
+        OrthoCamera(int32_t resolutionX, int32_t resolutionY,
+                    const YAM::Vector3& position, const YAM::Vector3& direction,
+                    flt orthoSizeX, flt orthoSizeY);
+
+        YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
     };
 
-    class PerspectiveCamera : Camera {
-        flt fov;
-        flt nearClip;
+    class PerspectiveCamera : public Camera {
+        flt fieldOfView;
+        flt nearPlaneDistance;
 
-        Vector3 screenPosition;
+        YAM::Vector3 screenPosition;
 
-        flt screenSizeX;
-        flt screenSizeY;
+        flt nearPlaneWidth;
+        flt nearPlaneHeight;
+
     public:
-        PerspectiveCamera(const Vector3& position, const Vector3& direction, flt fov, flt nearClip)
-            : Camera(position, direction)
-            , fov(fov)
-            , nearClip(nearClip) {
-            screenPosition = GetScreenPosition();
-        }
+        PerspectiveCamera(int32_t resolutionX, int32_t resolutionY,
+                          const YAM::Vector3& position, const YAM::Vector3& direction,
+                          flt fieldOfView, flt nearPlaneDistance);
 
-        Ray GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) override;
+        YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
 
     private:
-        Vector3 GetScreenPosition() const;
-        void GetWorldScreenSize(flt& screenSizeX, flt& screenSizeY) const ;
+        YAM::Vector3 GetScreenPosition() const;
+        void CalculateNearPlane(flt& nearPlaneWidth, flt& nearPlaneHeight) const;
     };
 }

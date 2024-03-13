@@ -1,44 +1,34 @@
 #include "Renderer.h"
 
+#include "Buffer.h"
 #include "Camera.h"
-#include "iostream"
 #include "LinearMath.h"
+#include "TGAWriter.h"
 
-namespace YAM {
-    Renderer::Renderer() {
-        for( std::array<bool, 60>& column : pixels) {
-            for (bool& pixel: column) {
-                pixel = false;
-            }
-        }
+using namespace YAM;
+
+namespace YAR {
+    Renderer::Renderer(uint32_t sizeX, uint32_t sizeY) {
+        colorBuffer = std::make_unique<Buffer>(sizeX, sizeY);
     }
 
-    void Renderer::Draw() const {
-        for (int i = 0; i < 60; ++i) {
-            for (int j = 0; j < 60; ++j) {
-                if (pixels[i][j])
-                {
-                    std::cout << "0";
-                } else {
-                    std::cout << ".";
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
+    Renderer::~Renderer() = default;
 
-    void Renderer::RayCast(const Vector3& cameraPosition, const Vector3& cameraDirection) {
-        OrthoCamera camera{cameraPosition, cameraDirection, 5.f, 5.f};
+    void Renderer::Render(const Camera* camera) const {
+        for (int i = 0; i < colorBuffer->GetSizeX(); ++i) {
+            for (int j = 0; j < colorBuffer->GetSizeY(); ++j) {
+                Ray ray = camera->GetRay(i, j);
 
-        for (int i = 0; i < 60; ++i) {
-            for (int j = 0; j < 60; ++j) {
-                Ray ray = camera.GetRay(i, j, 60, 60);
-
-                Sphere sphere {{0.f}, 1.f};
+                Sphere sphere {Vector3{0.f}, 1.f};
                 std::vector<Vector3> result;
-                pixels[i][j] = LinearMath::FindIntersection(ray, sphere, result);
+                const bool WasIntesection = LinearMath::FindIntersection(ray, sphere, result);
+
+                colorBuffer->SetPix(i, j, WasIntesection ? 0xffffffff : 0xff000000);
             }
         }
     }
 
+    void Renderer::Save(const std::string& path) const {
+        TGAWriter::Write(path, colorBuffer->GetData(), colorBuffer->GetSizeX(), colorBuffer->GetSizeY());
+    }
 } // SG

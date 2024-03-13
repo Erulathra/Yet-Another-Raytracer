@@ -6,10 +6,8 @@
 #include <string>
 #include "Defines.h"
 
-namespace YAM
-{
-    class Vector3
-    {
+namespace YAM{
+    class Vector3 {
     public:
         flt x;
         flt y;
@@ -17,18 +15,18 @@ namespace YAM
 
         Vector3() : x(0), y(0), z(0) {}
 
-        Vector3(flt x) : x(x), y(x), z(x) {}
+        explicit Vector3(flt x) : x(x), y(x), z(x) {}
 
         Vector3(flt X, flt Y, flt Z) : x(X), y(Y), z(Z) {}
 
-        double Length() const { return std::sqrt(x * x + y * y + z * z); }
+        flt Length() const { return std::sqrt(x * x + y * y + z * z); }
 
-        double SquaredLength() const { return x * x + y * y + z * z; }
+        flt SquaredLength() const { return x * x + y * y + z * z; }
 
         Vector3 Normal() const {
             const double length = this->Length();
             if (length == 0)
-                return {0.};
+                return Vector3{0.};
 
             return *this / length;
         }
@@ -39,19 +37,19 @@ namespace YAM
 
         flt Dot(Vector3 rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
 
-        [[nodiscard]] flt Angle(Vector3 rhs) const {
+        flt Angle(Vector3 rhs) const {
             return acos(this->Dot(rhs) / (this->Length() * rhs.Length()));
         }
 
-        [[nodiscard]] Vector3 Cross(Vector3 rhs) const {
-            return {this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,
-                               this->x * rhs.y - this->y * rhs.x};
+        Vector3 Cross(Vector3 rhs) const {
+            return {
+                this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,
+                this->x * rhs.y - this->y * rhs.x
+            };
         }
 
-        Vector3& operator=(Vector3 const& another)
-        {
-            if (this == &another)
-            {
+        Vector3& operator=(Vector3 const& another) {
+            if (this == &another) {
                 return *this;
             }
 
@@ -96,8 +94,7 @@ namespace YAM
             return result;
         }
 
-        friend Vector3 operator*(flt scalar, Vector3 vector)
-        {
+        friend Vector3 operator*(flt scalar, Vector3 vector) {
             return vector * scalar;
         }
 
@@ -120,8 +117,7 @@ namespace YAM
         bool operator<=(const Vector3& rhs) const { return !(rhs < *this); }
         bool operator>=(const Vector3& rhs) const { return !(*this < rhs); }
 
-        friend std::ostream& operator<<(std::ostream& Os, const Vector3& vector3)
-        {
+        friend std::ostream& operator<<(std::ostream& Os, const Vector3& vector3) {
             Os << "[" << vector3.x << "," << vector3.y << "," << vector3.z << "]";
             return Os;
         }
@@ -132,5 +128,4 @@ namespace YAM
             return result.str();
         }
     };
-
 } // namespace SG
