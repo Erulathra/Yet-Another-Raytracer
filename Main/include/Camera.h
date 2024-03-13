@@ -11,10 +11,15 @@ namespace YAM {
         Vector3 position;
         Vector3 direction;
 
+        uint32_t ResX;
+        uint32_t ResY;
+
     public:
         Camera(const Vector3& position, const Vector3& direction)
             : position(position)
-              , direction(direction) {
+              , direction(direction)
+        , ResX(480)
+        , ResY(320) {
         }
 
         virtual ~Camera() = default;
@@ -38,13 +43,23 @@ namespace YAM {
     class PerspectiveCamera : Camera {
         flt fov;
         flt nearClip;
+
+        Vector3 screenPosition;
+
+        flt screenSizeX;
+        flt screenSizeY;
     public:
         PerspectiveCamera(const Vector3& position, const Vector3& direction, flt fov, flt nearClip)
             : Camera(position, direction)
             , fov(fov)
             , nearClip(nearClip) {
+            screenPosition = GetScreenPosition();
         }
 
         Ray GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) override;
+
+    private:
+        Vector3 GetScreenPosition() const;
+        void GetWorldScreenSize(flt& screenSizeX, flt& screenSizeY) const ;
     };
 }

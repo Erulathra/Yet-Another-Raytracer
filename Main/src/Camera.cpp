@@ -19,4 +19,18 @@ namespace YAM {
 
         return {screenStart + screenOffset, position};
     }
+
+    Ray PerspectiveCamera::GetRay(uint32_t X, uint32_t Y, uint32_t ResX, uint32_t ResY) {
+
+    }
+
+    Vector3 PerspectiveCamera::GetScreenPosition() const {
+        return position + direction * nearClip;
+    }
+
+    void PerspectiveCamera::GetWorldScreenSize(flt& screenSizeX, flt& screenSizeY) const {
+        flt aspectRation = static_cast<flt>(ResX) / ResY;
+        
+        screenSizeX = nearClip * 
+    }
 }
