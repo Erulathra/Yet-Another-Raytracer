@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cmath>
+#include <Defines.h>
 #include <ostream>
 #include <sstream>
 #include <string>
-#include "Defines.h"
 
 namespace YAM{
     class Vector3 {
@@ -20,33 +20,33 @@ namespace YAM{
         Vector3(flt X, flt Y, flt Z) : x(X), y(Y), z(Z) {}
 
         flt Length() const { return std::sqrt(x * x + y * y + z * z); }
-
         flt SquaredLength() const { return x * x + y * y + z * z; }
 
         Vector3 Normal() const {
             const double length = this->Length();
-            if (length == 0)
+            if (length < SmallNumber)
                 return Vector3{0.};
 
             return *this / length;
         }
 
-        bool IsNear(const Vector3& vector3, flt error) const {
+        bool IsNear(const Vector3& vector3, flt error = SmallNumber) const {
             return std::abs(this->Length() - vector3.Length()) < error;
         }
 
-        flt Dot(Vector3 rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
+        flt Dot(const Vector3& rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
+        static flt Dot(const Vector3& a, const Vector3& b) { return a.Dot(b); }
 
-        flt Angle(Vector3 rhs) const {
-            return acos(this->Dot(rhs) / (this->Length() * rhs.Length()));
-        }
+        flt Angle(const Vector3& rhs) const { return acos(this->Dot(rhs) / (this->Length() * rhs.Length())); }
 
-        Vector3 Cross(Vector3 rhs) const {
+        Vector3 Cross(const Vector3& rhs) const {
             return {
                 this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,
                 this->x * rhs.y - this->y * rhs.x
             };
         }
+
+        static Vector3 Cross(const Vector3& a, const Vector3& b) { return a.Cross(b); }
 
         Vector3& operator=(Vector3 const& another) {
             if (this == &another) {
@@ -94,7 +94,7 @@ namespace YAM{
             return result;
         }
 
-        friend Vector3 operator*(flt scalar, Vector3 vector) {
+        friend Vector3 operator*(flt scalar, const Vector3& vector) {
             return vector * scalar;
         }
 

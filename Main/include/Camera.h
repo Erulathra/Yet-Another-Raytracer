@@ -28,35 +28,35 @@ namespace YAR{
     };
 
     class OrthoCamera : public Camera {
-        flt orthoSizeX;
-        flt orthoSizeY;
+        YAM::flt orthoSizeX;
+        YAM::flt orthoSizeY;
 
     public:
         OrthoCamera(int32_t resolutionX, int32_t resolutionY,
                     const YAM::Vector3& position, const YAM::Vector3& direction,
-                    flt orthoSizeX, flt orthoSizeY);
+                    YAM::flt orthoSizeX, YAM::flt orthoSizeY);
 
         YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
     };
 
     class PerspectiveCamera : public Camera {
-        flt fieldOfView;
-        flt nearPlaneDistance;
+        YAM::flt fieldOfView;
+        YAM::flt nearPlaneDistance;
 
         YAM::Vector3 screenPosition;
 
-        flt nearPlaneWidth;
-        flt nearPlaneHeight;
+        YAM::flt nearPlaneWidth;
+        YAM::flt nearPlaneHeight;
 
     public:
         PerspectiveCamera(int32_t resolutionX, int32_t resolutionY,
                           const YAM::Vector3& position, const YAM::Vector3& direction,
-                          flt fieldOfView, flt nearPlaneDistance);
+                          YAM::flt fieldOfView, YAM::flt nearPlaneDistance);
 
         YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
 
     private:
         YAM::Vector3 GetScreenPosition() const;
-        void CalculateNearPlane(flt& nearPlaneWidth, flt& nearPlaneHeight) const;
+        void CalculateNearPlane(YAM::flt& nearPlaneWidth, YAM::flt& nearPlaneHeight) const;
     };
 }

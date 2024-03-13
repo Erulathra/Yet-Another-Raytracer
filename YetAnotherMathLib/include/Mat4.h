@@ -117,7 +117,7 @@ namespace YAM {
             *this = *this * scalar;
         }
 
-        Mat4 operator*(Mat4 another) const {
+        Mat4 operator*(const Mat4& another) const {
             Mat4 result(0);
             for (int i = 0; i < GRID_SIZE_X; ++i) {
                 for (int j = 0; j < GRID_SIZE_Y; ++j) {
@@ -160,7 +160,7 @@ namespace YAM {
             return result;
         }
 
-        Mat4 Inverse() {
+        Mat4 Inverse() const {
             std::array<flt, 16> result{};
             std::array<flt, 16> flatGrid{};
 

@@ -25,7 +25,7 @@ namespace YAR{
         Vector3 screenOffset = (stepX * x) * screenRight
             + (stepY * y) * screenDown;
 
-        return {screenStart + screenOffset, position};
+        return {direction, screenStart + screenOffset};
     }
 
     PerspectiveCamera::PerspectiveCamera(int32_t resolutionX, int32_t resolutionY, const YAM::Vector3& position,
@@ -46,9 +46,9 @@ namespace YAR{
         const Vector3 screenLeft = -screenRight;
         const Vector3 screenDown = -screenUp;
 
-        const Vector3 screenStart = screenLeft * nearPlaneWidth
-            + screenUp * nearPlaneHeight
-            + direction * nearPlaneDistance;
+        const Vector3 screenStart = screenLeft * nearPlaneWidth * 0.5
+            + screenUp * nearPlaneHeight * 0.5
+            + direction * nearPlaneDistance + position;
 
         const flt screenStepX = nearPlaneWidth / resolutionX;
         const flt screenStepY = nearPlaneHeight / resolutionY;
