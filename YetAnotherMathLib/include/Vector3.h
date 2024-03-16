@@ -39,6 +39,8 @@ namespace YAM{
 
         flt Angle(const Vector3& rhs) const { return acos(this->Dot(rhs) / (this->Length() * rhs.Length())); }
 
+        Vector3 Abs() const { return {std::abs(x), std::abs(y), std::abs(z)}; }
+
         Vector3 Cross(const Vector3& rhs) const {
             return {
                 this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,

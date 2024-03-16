@@ -4,6 +4,7 @@
 #include <cmath>
 #include <ostream>
 #include <vector>
+#include <cstdint>
 
 
 namespace YAM{
@@ -12,6 +13,10 @@ namespace YAM{
         Vector3 point;
 
     public:
+        Ray(const Vector3& direction, const Vector3& point)
+            : direction(direction),
+              point(point) {}
+
         static Ray FromTwoPoints(const Vector3& pointA, const Vector3& pointB) {
             const Vector3 foundVector = pointB - pointA;
             return {foundVector.Normal(), pointA};
@@ -63,21 +68,48 @@ namespace YAM{
         }
     };
 
-    struct Triange {
+    struct Triangle {
         Vector3 posA;
         Vector3 posB;
         Vector3 posC;
+        
+        Vector3 norA;
+        Vector3 norB;
+        Vector3 norC;
 
-        Triange(const Vector3& posA, const Vector3& posB, const Vector3& posC)
+        Triangle(
+            const Vector3& posA, const Vector3& posB, const Vector3& posC,
+            const Vector3& norA, const Vector3& norB, const Vector3& norC)
             : posA(posA)
               , posB(posB)
-              , posC(posC) {}
+              , posC(posC)
+              , norA(norA)
+              , norB(norB)
+              , norC(norC)
+        {}
+    };
+
+    union Color {
+        uint32_t hex;
+        uint8_t bytes[4];
+
+        static Color FromVector(Vector3 vector3) {
+            Color result{};
+            
+            result.bytes[3] = 255;
+            result.bytes[2] = 255.f * vector3.x;
+            result.bytes[1] = 255.f * vector3.y;
+            result.bytes[0] = 255.f * vector3.z;
+
+            return result;
+        }
     };
 
     struct HitInfo {
         Vector3 hitPoint;
         Vector3 normal;
         flt distance;
+        uint32_t color;
     };
 
     class LinearMath {
@@ -165,7 +197,7 @@ namespace YAM{
             return true;
         }
 
-        static bool FindIntersection(const Ray& ray, const Triange& tri, HitInfo& hitInfo) {
+        static bool FindIntersection(const Ray& ray, const Triangle& tri, HitInfo& hitInfo) {
             Vector3 edgeAB = tri.posB - tri.posA;
             Vector3 edgeAC = tri.posC - tri.posA;
 
@@ -175,7 +207,7 @@ namespace YAM{
             Vector3 daRayPoint = Vector3::Cross(aRayPoint, ray.direction);
 
             flt det = -Vector3::Dot(ray.direction, triangleNormal);
-            if (det < SmallNumber)
+            if (-det < SmallNumber)
                 return false;
             
             flt invDet = 1 / det;
@@ -186,14 +218,17 @@ namespace YAM{
                 return false;
             
             flt barU = Vector3::Dot(edgeAC, daRayPoint) * invDet;
-            flt barV = Vector3::Dot(edgeAB, daRayPoint) * invDet;
+            flt barV = -Vector3::Dot(edgeAB, daRayPoint) * invDet;
             flt barW = 1 - barU - barV;
 
             if (barU >= 0.f && barV >= 0.f && barW >= 0.f) {
                 hitInfo.hitPoint = ray.point + ray.direction * distance;
-                // TODO:
-                // hitInfo.normal =
                 hitInfo.distance = distance;
+                hitInfo.normal = (tri.norA * barW + tri.norB * barU + tri.norC * barV).Normal();
+
+                const Vector3 lightDir =  {-1.f, 1.f, 1.f};
+                const Color color = Color::FromVector(Vector3{1.f} * Vector3::Dot(hitInfo.normal, lightDir.Normal()));
+                hitInfo.color = color.hex;
 
                 return true;
             }

@@ -9,13 +9,20 @@ namespace YAR{
         : sizeX(sizeX)
           , sizeY(sizeY) {
         colorBuf.resize(sizeX * sizeY);
+        depth.resize(sizeX * sizeY);
     }
 
     Buffer::~Buffer() = default;
 
     void Buffer::FillColor(uint32_t color) {
-        for (int colorID = 0; colorID < sizeX * sizeY; ++colorID) {
-            colorBuf[colorID] = color;
+        for (int i = 0; i < sizeX * sizeY; ++i) {
+            colorBuf[i] = color;
+        }
+    }
+
+    void Buffer::FillDepth(float value) {
+        for (int i = 0; i < sizeX * sizeY; ++i) {
+            depth[i] = value;
         }
     }
 } // YAR
