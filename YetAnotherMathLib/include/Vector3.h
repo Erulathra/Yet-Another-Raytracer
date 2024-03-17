@@ -5,6 +5,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 namespace YAM{
     class Vector3 {
@@ -28,6 +29,16 @@ namespace YAM{
                 return Vector3{0.};
 
             return *this / length;
+        }
+
+        Vector3 Sat() const {
+            Vector3 result;
+
+            result.x = std::clamp(x, 0.f, 1.f);
+            result.y = std::clamp(y, 0.f, 1.f);
+            result.z = std::clamp(z, 0.f, 1.f);
+            
+            return result;
         }
 
         bool IsNear(const Vector3& vector3, flt error = SmallNumber) const {

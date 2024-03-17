@@ -6,6 +6,8 @@
 #include <vector>
 #include <cstdint>
 
+#include "spdlog/spdlog.h"
+
 
 namespace YAM{
     struct Ray {
@@ -93,15 +95,25 @@ namespace YAM{
         uint32_t hex;
         uint8_t bytes[4];
 
-        static Color FromVector(Vector3 vector3) {
+        static Color FromVector(Vector3 vector) {
             Color result{};
+
+            Vector3 saturatedVec = vector.Sat();
             
             result.bytes[3] = 255;
-            result.bytes[2] = 255.f * vector3.x;
-            result.bytes[1] = 255.f * vector3.y;
-            result.bytes[0] = 255.f * vector3.z;
+            result.bytes[2] = 255.f * saturatedVec.x;
+            result.bytes[1] = 255.f * saturatedVec.y;
+            result.bytes[0] = 255.f * saturatedVec.z;
 
             return result;
+        }
+
+        Vector3 ToVector() const {
+            return {
+                bytes[2] / 255.f,
+                bytes[1] / 255.f,
+                bytes[0] / 255.f
+            };
         }
     };
 
@@ -109,7 +121,6 @@ namespace YAM{
         Vector3 hitPoint;
         Vector3 normal;
         flt distance;
-        uint32_t color;
     };
 
     class LinearMath {
@@ -179,7 +190,7 @@ namespace YAM{
             return true;
         }
 
-        static bool FindIntersection(const Ray& ray, const Sphere& sphere, std::vector<Vector3>& result) {
+        static bool FindIntersection(const Ray& ray, const Sphere& sphere, HitInfo& hitInfo) {
             const Vector3 centerToRayVector = ray.point - sphere.center;
             const flt a = ray.direction.Dot(ray.direction);
             const flt b = 2. * centerToRayVector.Dot(ray.direction);
@@ -190,48 +201,51 @@ namespace YAM{
                 return false;
 
             const flt solutionOne = (-b - std::sqrt(delta)) / (2. * a);
-            const flt solutionfltwo = (-b + std::sqrt(delta)) / (2. * a);
+            const flt solutionTwo = (-b + std::sqrt(delta)) / (2. * a);
 
-            result = {ray.point + ray.direction * solutionOne, ray.point + ray.direction * solutionfltwo};
+            const flt nearestSolution = solutionOne <= solutionTwo ? solutionOne : solutionTwo;
+            if (nearestSolution <= 0)
+                return false;
 
+            hitInfo.hitPoint = ray.point + ray.direction * nearestSolution;
+            hitInfo.distance = nearestSolution;
+            hitInfo.normal = (hitInfo.hitPoint - sphere.center).Normal();
+            
             return true;
         }
 
         static bool FindIntersection(const Ray& ray, const Triangle& tri, HitInfo& hitInfo) {
-            Vector3 edgeAB = tri.posB - tri.posA;
-            Vector3 edgeAC = tri.posC - tri.posA;
+            const Vector3 edgeAB = tri.posB - tri.posA;
+            const Vector3 edgeAC = tri.posC - tri.posA;
 
-            Vector3 triangleNormal = Vector3::Cross(edgeAB, edgeAC);
+            const Vector3 triangleNormal = Vector3::Cross(edgeAB, edgeAC);
 
-            Vector3 aRayPoint = ray.point - tri.posA;
-            Vector3 daRayPoint = Vector3::Cross(aRayPoint, ray.direction);
+            const Vector3 aRayPoint = ray.point - tri.posA;
+            const Vector3 daRayPoint = Vector3::Cross(aRayPoint, ray.direction);
 
-            flt det = -Vector3::Dot(ray.direction, triangleNormal);
+            const flt det = -Vector3::Dot(ray.direction, triangleNormal);
             if (-det < SmallNumber)
                 return false;
-            
-            flt invDet = 1 / det;
+
+            const flt invDet = 1 / det;
 
             // Calculate distance to triangle and baricentric cooridinates
-            flt distance = Vector3::Dot(aRayPoint, triangleNormal) * invDet;
+            const flt distance = Vector3::Dot(aRayPoint, triangleNormal) * invDet;
             if (distance < SmallNumber)
                 return false;
-            
-            flt barU = Vector3::Dot(edgeAC, daRayPoint) * invDet;
-            flt barV = -Vector3::Dot(edgeAB, daRayPoint) * invDet;
-            flt barW = 1 - barU - barV;
+
+            const flt barU = Vector3::Dot(edgeAC, daRayPoint) * invDet;
+            const flt barV = -Vector3::Dot(edgeAB, daRayPoint) * invDet;
+            const flt barW = 1 - barU - barV;
 
             if (barU >= 0.f && barV >= 0.f && barW >= 0.f) {
                 hitInfo.hitPoint = ray.point + ray.direction * distance;
                 hitInfo.distance = distance;
                 hitInfo.normal = (tri.norA * barW + tri.norB * barU + tri.norC * barV).Normal();
-
-                const Vector3 lightDir =  {-1.f, 1.f, 1.f};
-                const Color color = Color::FromVector(Vector3{1.f} * Vector3::Dot(hitInfo.normal, lightDir.Normal()));
-                hitInfo.color = color.hex;
-
+                
                 return true;
             }
+
 
             return false;
         }

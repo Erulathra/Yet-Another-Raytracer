@@ -4,22 +4,24 @@
 #include <memory>
 #include <vector>
 
-namespace YAR{
+namespace YAR {
+    class Renderable;
     class Buffer;
     class Camera;
-}
-
-namespace YAR {
 
     class Renderer {
     private:
-        std::unique_ptr<YAR::Buffer> colorBuffer;
+        std::unique_ptr<Buffer> colorBuffer;
+
+        std::vector<std::shared_ptr<Renderable>> renderables;
 
     public:
         Renderer(uint32_t sizeX, uint32_t sizeY);
         ~Renderer();
 
-        void Render(const YAR::Camera* camera) const;
+        void AddRenderable(const std::shared_ptr<Renderable>& renderable);
+
+        void Render(const Camera* camera) const;
         void Save(const std::string& path) const;
     };
 
