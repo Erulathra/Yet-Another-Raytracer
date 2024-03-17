@@ -87,6 +87,10 @@ namespace YAM{
         Vector3 norA;
         Vector3 norB;
         Vector3 norC;
+        
+        Triangle( const Vector3& posA, const Vector3& posB, const Vector3& posC)
+            : Triangle(posA, posB, posC, Vector3{0.f}, Vector3{0.f}, Vector3{0.f})
+        {}
 
         Triangle(
             const Vector3& posA, const Vector3& posB, const Vector3& posC,
