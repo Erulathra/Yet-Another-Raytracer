@@ -4,7 +4,7 @@
 #include "Vector3.h"
 
 int main(int argc, char* argv[]) {
-    uint32_t resX = 256, resY = 256;
+    uint32_t resX = 512, resY = 512;
     
     YAR::Renderer renderer{resX, resY};
 

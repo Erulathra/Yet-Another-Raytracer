@@ -2,9 +2,20 @@
 
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <vector>
 
-namespace YAR {
+namespace YAR{
+    struct RenderBounds {
+        uint32_t minX;
+        uint32_t minY;
+
+        uint32_t maxX;
+        uint32_t maxY;
+
+        RenderBounds();
+    };
+
     class Renderable;
     class Buffer;
     class Camera;
@@ -12,8 +23,14 @@ namespace YAR {
     class Renderer {
     private:
         std::unique_ptr<Buffer> colorBuffer;
+        mutable std::mutex colorBufferMutex;
 
         std::vector<std::shared_ptr<Renderable>> renderables;
+
+        uint32_t samplesPerPixel;
+        uint32_t tilesPerRow;
+
+        std::shared_ptr<Camera> camera;
 
     public:
         Renderer(uint32_t sizeX, uint32_t sizeY);
@@ -23,6 +40,8 @@ namespace YAR {
 
         void Render(const Camera* camera) const;
         void Save(const std::string& path) const;
-    };
 
+    private:
+        void RenderWorker(const Camera* camera, const RenderBounds& renderBounds) const;
+    };
 } // SG
