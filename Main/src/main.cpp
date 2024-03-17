@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 
     YAR::Material material{};
     material.color.hex = 0xffffffff;
-    std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/monke.obj");
+    std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
     renderer.AddRenderable(renderable);
     
     YAR::Material material2{};
