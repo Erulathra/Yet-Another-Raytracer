@@ -67,12 +67,12 @@ namespace YAR{
             uint32_t indiceID = triangleID * 3;
             
             uint32_t v1 = vert_indicies[indiceID] - 1;
-            uint32_t v2 = vert_indicies[indiceID + 2] - 1;
-            uint32_t v3 = vert_indicies[indiceID + 1] - 1;
+            uint32_t v2 = vert_indicies[indiceID + 1] - 1;
+            uint32_t v3 = vert_indicies[indiceID + 2] - 1;
             
             uint32_t n1 = norm_indicies[indiceID] - 1;
-            uint32_t n2 = norm_indicies[indiceID + 2] - 1;
-            uint32_t n3 = norm_indicies[indiceID + 1] - 1;
+            uint32_t n2 = norm_indicies[indiceID + 1] - 1;
+            uint32_t n3 = norm_indicies[indiceID + 2] - 1;
             
             trianges.emplace_back(
                 verticies[v1],verticies[v2],verticies[v3],

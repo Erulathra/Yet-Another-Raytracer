@@ -224,19 +224,20 @@ namespace YAM{
             const Vector3 daRayPoint = Vector3::Cross(aRayPoint, ray.direction);
 
             const flt det = -Vector3::Dot(ray.direction, triangleNormal);
-            if (-det < SmallNumber)
+            if (det < SmallNumber)
                 return false;
 
             const flt invDet = 1 / det;
 
-            // Calculate distance to triangle and baricentric cooridinates
+            // Calculate distance to triangle
             const flt distance = Vector3::Dot(aRayPoint, triangleNormal) * invDet;
             if (distance < SmallNumber)
                 return false;
 
+            // Calculate baricentric cooridinates
             const flt barU = Vector3::Dot(edgeAC, daRayPoint) * invDet;
             const flt barV = -Vector3::Dot(edgeAB, daRayPoint) * invDet;
-            const flt barW = 1 - barU - barV;
+            const flt barW = 1.f - barU - barV;
 
             if (barU >= 0.f && barV >= 0.f && barW >= 0.f) {
                 hitInfo.hitPoint = ray.point + ray.direction * distance;
