@@ -35,6 +35,10 @@ MeshRenderable::MeshRenderable(const Material& material, const std::string& objP
 MeshRenderable::~MeshRenderable() = default;
 
 bool MeshRenderable::Trace(const YAM::Ray& ray, RenderHitInfo& outHit) {
+    if (!YAM::LinearMath::FindIntersection(ray, mesh.GetBoudingBox())) {
+        return false;
+    }
+    
     outHit.distance = std::numeric_limits<float>::max();
     
     RenderHitInfo currentHit;

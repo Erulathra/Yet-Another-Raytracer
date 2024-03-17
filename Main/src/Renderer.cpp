@@ -40,14 +40,14 @@ namespace YAR {
                         }
                     }
                 }
-
+                
                 if (wasIntersection) {
                     const Vector3 lightDir =  {-1.f, 1.f, 1.f};
-
+                
                     const Vector3 objColor = closestHit.material->color.ToVector();
                     const Color color = Color::FromVector(
                         objColor * Vector3::Dot(closestHit.normal, lightDir.Normal()));
-
+                
                     colorBuffer->SetPix(j, i, color.hex);
                 }
             }

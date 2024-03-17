@@ -35,6 +35,15 @@ namespace YAM{
         flt radius;
     };
 
+    struct AABB {
+        Vector3 min;
+        Vector3 max;
+
+        AABB()
+            : min(std::numeric_limits<flt>::max())
+              , max(std::numeric_limits<flt>::lowest()) {}
+    };
+
     struct Segment {
         Vector3 pointOne;
         Vector3 pointTwo;
@@ -249,6 +258,32 @@ namespace YAM{
 
 
             return false;
+        }
+        
+        // https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms#18459
+        static bool FindIntersection(const Ray& ray, const AABB& aabb) {
+            const float t1 = (aabb.min.x - ray.point.x) / ray.direction.x;
+            const float t2 = (aabb.max.x - ray.point.x) / ray.direction.x;
+            const float t3 = (aabb.min.y - ray.point.y) / ray.direction.y;
+            const float t4 = (aabb.max.y - ray.point.y) / ray.direction.y;
+            const float t5 = (aabb.min.z - ray.point.z) / ray.direction.z;
+            const float t6 = (aabb.max.z - ray.point.z) / ray.direction.z;
+
+            const float aMin = t1 < t2 ? t1 : t2;
+            const float bMin = t3 < t4 ? t3 : t4;
+            const float cMin = t5 < t6 ? t5 : t6;
+
+            const float aMax = t1 > t2 ? t1 : t2;
+            const float bMax = t3 > t4 ? t3 : t4;
+            const float cMax = t5 > t6 ? t5 : t6;
+
+            const float fMax = aMin > bMin ? aMin : bMin;
+            const float fMin = aMax < bMax ? aMax : bMax;
+
+            const float t7 = fMax > cMin ? fMax : cMin;
+            const float t8 = fMin < cMax ? fMin : cMax;
+
+            return (t8 < 0 || t7 > t8) ? false : t7 > 0.f;
         }
     };
 }

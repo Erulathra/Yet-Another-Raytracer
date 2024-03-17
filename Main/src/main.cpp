@@ -8,6 +8,7 @@ int main(int argc, char* argv[]) {
     
     YAR::Renderer renderer{resX, resY};
 
+    // YAM::Vector3 cameraPosition(-5.f, 5.f, 10.f);
     YAM::Vector3 cameraPosition(0.f, 0.f, 10.f);
     YAM::Vector3 cameraDirection = YAM::Vector3{0.f} - cameraPosition;
     cameraDirection = cameraDirection.Normal();

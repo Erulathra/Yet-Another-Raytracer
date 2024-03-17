@@ -79,5 +79,19 @@ namespace YAR{
                 normals[n1],normals[n2],normals[n3]
                 );
         }
+        
+        CalculateBoundingBox(verticies);
+    }
+
+    void Mesh::CalculateBoundingBox(const std::vector<YAM::Vector3>& verticies) {
+        for (const YAM::Vector3& vertex : verticies) {
+            boudingBox.min.x = std::min(boudingBox.min.x, vertex.x);
+            boudingBox.min.y = std::min(boudingBox.min.y, vertex.y);
+            boudingBox.min.z = std::min(boudingBox.min.z, vertex.z);
+
+            boudingBox.max.x = std::max(boudingBox.max.x, vertex.x);
+            boudingBox.max.y = std::max(boudingBox.max.y, vertex.y);
+            boudingBox.max.z = std::max(boudingBox.max.z, vertex.z);
+        }
     }
 } // YAR
