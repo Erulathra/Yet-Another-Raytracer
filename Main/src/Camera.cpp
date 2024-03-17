@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "Algorithms.h"
+
 namespace YAR{
     using namespace YAM;
 
@@ -53,8 +55,14 @@ namespace YAR{
         const flt screenStepX = nearPlaneWidth / resolutionX;
         const flt screenStepY = nearPlaneHeight / resolutionY;
 
-        const Vector3 scrrenOffset = screenStepX * x * screenRight
-            + screenStepY * y * screenDown;
+        // add small jitter to allow SMAA
+        flt jitterX, jitterY;
+        Algorithms::RandomPointInCircle(jitterX, jitterY);
+        constexpr flt jitterStrenth = 0.5f;
+
+        const Vector3 scrrenOffset
+            = screenStepX * (static_cast<flt>(x) + jitterX * jitterStrenth) * screenRight
+            + screenStepY * (static_cast<flt>(y) + jitterY * jitterStrenth) * screenDown;
 
         return Ray::FromTwoPoints(position, screenStart + scrrenOffset);
     }
