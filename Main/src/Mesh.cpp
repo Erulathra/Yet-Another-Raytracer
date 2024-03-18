@@ -99,7 +99,7 @@ namespace YAR{
     }
 
     void Mesh::Transform(const YAM::Mat4& mat) {
-        YAM::Mat4 normalTranslation = mat.ClearTranslation().Inverse().Transpose();
+        const YAM::Mat4 normalTranslation = mat.ClearTranslation().Inverse().Transpose();
         
         for (YAM::Triangle& triange : trianges) {
             triange.posA = YAM::Vector3(mat * YAM::Vector4(triange.posA, 1.f));

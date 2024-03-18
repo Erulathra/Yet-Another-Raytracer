@@ -81,10 +81,11 @@ namespace YAR{
                     }
 
                     if (wasIntersection) {
-                        const Vector3 lightDir = {-1.f, 1.f, 1.f};
+                        const Vector3 lightDir = {-1.f, -1.f, 1.f};
 
                         const Vector3 objColor = closestHit.material->color.ToVector();
-                        const float lightValue = std::min(1.f, Vector3::Dot(closestHit.normal, lightDir.Normal()) + 0.3f);
+                        const float lightDotNorm = std::max(0.f, Vector3::Dot(closestHit.normal, -lightDir.Normal()));
+                        const float lightValue = std::min(1.f, lightDotNorm + 0.1f);
                         pixelColor += objColor * lightValue;
                     }
                         

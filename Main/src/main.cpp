@@ -7,43 +7,65 @@
 
 void ExerciseOne();
 
+void CreateCornerBox(YAR::Renderer& renderer) {
+    YAR::Material greenMat{};
+    greenMat.color.hex = 0xff00ff00;
+    
+    YAR::Material blueMat{};
+    blueMat.color.hex = 0xff0000ff;
+    
+    YAR::Material whiteMat{};
+    whiteMat.color.hex = 0xffffffff;
+
+    YAM::Mat4 WholeT = YAM::Mat4::Scale(2.f, 2.f, 2.f);
+
+    YAM::Mat4 CoreT = YAM::Mat4::RotationY(YAM::ToRad(180));
+    std::shared_ptr<YAR::MeshRenderable> coreRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/cornerboxCenter.obj");
+    coreRen->Transform(CoreT * WholeT);
+
+    YAM::Mat4 LeftT = YAM::Mat4::Translation(-1.f, 0.f, 0.f) * YAM::Mat4::RotationZ(YAM::ToRad(90));
+    std::shared_ptr<YAR::MeshRenderable> leftRen = std::make_shared<YAR::MeshRenderable>(greenMat,"res/plane.obj");
+    leftRen->Transform(LeftT * WholeT);
+    
+    YAM::Mat4 RightT = YAM::Mat4::Translation(1.f, 0.f, 0.f) * YAM::Mat4::RotationZ(YAM::ToRad(-90));
+    std::shared_ptr<YAR::MeshRenderable> rightRen = std::make_shared<YAR::MeshRenderable>(blueMat,"res/plane.obj");
+    rightRen->Transform(RightT * WholeT);
+    
+    renderer.AddRenderable(coreRen);
+    renderer.AddRenderable(leftRen);
+    renderer.AddRenderable(rightRen);
+}
+
 int main(int argc, char* argv[]) {
     YAM::Algorithms::SetRandomSeed(time(nullptr));
     
-    // uint32_t resX = 1024, resY = 1024;
-    uint32_t resX = 64, resY = 64;
+    uint32_t resX = 256, resY = 256;
+    // uint32_t resX = 64, resY = 64;
     
     YAR::Renderer renderer{resX, resY};
 
-    YAM::Vector3 cameraPosition(0.f, 0.f, 10.f);
+    YAM::Vector3 cameraPosition(0.f, 0.f, -3.f);
     YAM::Vector3 cameraDirection = YAM::Vector3{0.f} - cameraPosition;
     cameraDirection = cameraDirection.Normal();
-
-    cameraPosition += {0.f, 0.f, 0.f};
 
     YAR::Material material{};
     material.color.hex = 0xffffffff;
     std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
-    YAM::Mat4 transform = YAM::Mat4::Scale(0.5f, 0.5f, 0.5f) * YAM::Mat4::RotationY(YAM::ToRad(-45.f));
+    YAM::Mat4 transform = YAM::Mat4::Scale(0.25f, 0.25f, 0.25f) * YAM::Mat4::RotationY(YAM::ToRad(180.f));
     renderable->Transform(transform);
     renderer.AddRenderable(renderable);
-    
-    YAR::Material material2{};
-    material2.color.hex = 0xffff0000;
 
-    YAM::Sphere sphere {{0.f, 0.f, -10.f}, 3.f};
-    std::shared_ptr<YAR::SphereRenderable> sphereRen = std::make_shared<YAR::SphereRenderable>(material2, sphere);
-    renderer.AddRenderable(sphereRen);
+    CreateCornerBox(renderer);
     
     // std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::OrthoCamera>(
     //     resX, resY, cameraPosition, cameraDirection, 3.f, 3.f);
     std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::PerspectiveCamera>(
-        resX, resY, cameraPosition, cameraDirection, 45.f, 0.01);
+        resX, resY, cameraPosition, cameraDirection, 40.f, 0.02);
 
     renderer.Render(camera.get());
     renderer.Save("output.tga");
 
-    ExerciseOne();
+    // ExerciseOne();
 }
 
 void ExerciseOne() {
