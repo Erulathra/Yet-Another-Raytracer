@@ -10,6 +10,10 @@
 
 
 namespace YAM{
+#define M_1_180 (1. / 180.)
+    static flt ToDeg(flt rad) { return static_cast<flt>(rad * 180. * M_1_PI); }
+    static flt ToRad(flt deg) { return static_cast<flt>(deg * M_PI * M_1_180); }
+
     struct Ray {
         Vector3 direction;
         Vector3 point;
@@ -83,14 +87,13 @@ namespace YAM{
         Vector3 posA;
         Vector3 posB;
         Vector3 posC;
-        
+
         Vector3 norA;
         Vector3 norB;
         Vector3 norC;
-        
-        Triangle( const Vector3& posA, const Vector3& posB, const Vector3& posC)
-            : Triangle(posA, posB, posC, Vector3{0.f}, Vector3{0.f}, Vector3{0.f})
-        {}
+
+        Triangle(const Vector3& posA, const Vector3& posB, const Vector3& posC)
+            : Triangle(posA, posB, posC, Vector3{0.f}, Vector3{0.f}, Vector3{0.f}) {}
 
         Triangle(
             const Vector3& posA, const Vector3& posB, const Vector3& posC,
@@ -100,8 +103,7 @@ namespace YAM{
               , posC(posC)
               , norA(norA)
               , norB(norB)
-              , norC(norC)
-        {}
+              , norC(norC) {}
     };
 
     union Color {
@@ -112,7 +114,7 @@ namespace YAM{
             Color result{};
 
             Vector3 saturatedVec = vector.Sat();
-            
+
             result.bytes[3] = 255;
             result.bytes[2] = 255.f * saturatedVec.x;
             result.bytes[1] = 255.f * saturatedVec.y;
@@ -135,6 +137,7 @@ namespace YAM{
         Vector3 normal;
         flt distance;
     };
+
 
     class LinearMath {
     public:
@@ -223,7 +226,7 @@ namespace YAM{
             hitInfo.hitPoint = ray.point + ray.direction * nearestSolution;
             hitInfo.distance = nearestSolution;
             hitInfo.normal = (hitInfo.hitPoint - sphere.center).Normal();
-            
+
             return true;
         }
 
@@ -256,14 +259,14 @@ namespace YAM{
                 hitInfo.hitPoint = ray.point + ray.direction * distance;
                 hitInfo.distance = distance;
                 hitInfo.normal = (tri.norA * barW + tri.norB * barU + tri.norC * barV).Normal();
-                
+
                 return true;
             }
 
 
             return false;
         }
-        
+
         // https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms#18459
         static bool FindIntersection(const Ray& ray, const AABB& aabb) {
             const float t1 = (aabb.min.x - ray.point.x) / ray.direction.x;

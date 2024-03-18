@@ -1,5 +1,6 @@
 #include "Algorithms.h"
 #include "Camera.h"
+#include "Mat4.h"
 #include "Renderable.h"
 #include "Renderer.h"
 #include "Vector3.h"
@@ -10,7 +11,7 @@ int main(int argc, char* argv[]) {
     YAM::Algorithms::SetRandomSeed(time(nullptr));
     
     // uint32_t resX = 1024, resY = 1024;
-    uint32_t resX = 512, resY = 512;
+    uint32_t resX = 64, resY = 64;
     
     YAR::Renderer renderer{resX, resY};
 
@@ -23,6 +24,8 @@ int main(int argc, char* argv[]) {
     YAR::Material material{};
     material.color.hex = 0xffffffff;
     std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
+    YAM::Mat4 transform = YAM::Mat4::Scale(0.5f, 0.5f, 0.5f) * YAM::Mat4::RotationY(YAM::ToRad(-45.f));
+    renderable->Transform(transform);
     renderer.AddRenderable(renderable);
     
     YAR::Material material2{};

@@ -23,7 +23,6 @@ namespace YAR{
               , resolutionY(resolutionY) {}
 
         virtual ~Camera() = default;
-
         virtual YAM::Ray GetRay(uint32_t X, uint32_t Y) const = 0;
     };
 
@@ -35,6 +34,8 @@ namespace YAR{
         OrthoCamera(int32_t resolutionX, int32_t resolutionY,
                     const YAM::Vector3& position, const YAM::Vector3& direction,
                     YAM::flt orthoSizeX, YAM::flt orthoSizeY);
+
+        ~OrthoCamera() override;
 
         YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
     };
@@ -52,6 +53,8 @@ namespace YAR{
         PerspectiveCamera(int32_t resolutionX, int32_t resolutionY,
                           const YAM::Vector3& position, const YAM::Vector3& direction,
                           YAM::flt fieldOfView, YAM::flt nearPlaneDistance);
+
+        ~PerspectiveCamera() override;
 
         YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
 

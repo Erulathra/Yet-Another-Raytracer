@@ -11,6 +11,8 @@ namespace YAR{
           , orthoSizeX(orthoSizeX)
           , orthoSizeY(orthoSizeY) {}
 
+    OrthoCamera::~OrthoCamera() {};
+
     Ray OrthoCamera::GetRay(uint32_t x, uint32_t y) const {
         const flt stepX = orthoSizeX / resolutionX;
         const flt stepY = orthoSizeY / resolutionY;
@@ -40,6 +42,8 @@ namespace YAR{
         screenPosition = GetScreenPosition();
         CalculateNearPlane(nearPlaneWidth, nearPlaneHeight);
     }
+
+    PerspectiveCamera::~PerspectiveCamera() = default;
 
     Ray PerspectiveCamera::GetRay(uint32_t x, uint32_t y) const {
         const Vector3 screenRight = -direction.Cross({0., 1., 0.}).Normal();

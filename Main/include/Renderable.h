@@ -56,5 +56,7 @@ namespace YAR{
         ~MeshRenderable() override;
 
         bool Trace(const YAM::Ray& ray, RenderHitInfo& outHit) override;
+
+        void Transform(const YAM::Mat4& mat4);
     };
 }

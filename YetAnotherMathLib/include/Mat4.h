@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "Defines.h"
+#include "Vector4.h"
 
 namespace YAM {
 
@@ -38,7 +39,11 @@ namespace YAM {
             }
         }
 
-        flt &operator[](const std::pair<int, int>& coordinates) {
+        flt operator[](const std::pair<int, int>& coordinates) const {
+            return grid[coordinates.first][coordinates.second];
+        }
+        
+        flt& operator[](const std::pair<int, int>& coordinates) {
             return grid[coordinates.first][coordinates.second];
         }
 
@@ -298,6 +303,16 @@ namespace YAM {
             return finalResult;
         }
 
+        Mat4 ClearTranslation() const {
+            Mat4 result = *this;
+            
+            result.grid[3][0] = 0;
+            result.grid[3][1] = 0;
+            result.grid[3][2] = 0;
+
+            return result;
+        }
+
         friend std::ostream &operator<<(std::ostream &os, const Mat4 &mat4) {
             for (int i = 0; i < 4; ++i) {
                 os << "[ ";
@@ -310,56 +325,66 @@ namespace YAM {
         }
 
         static Mat4 Translation(flt x, flt y, flt z) {
-            Mat4 Result(1);
+            Mat4 result(1);
 
-            Result[{3, 0}] = x;
-            Result[{3, 1}] = y;
-            Result[{3, 2}] = z;
-            return  Result;
+            result[{3, 0}] = x;
+            result[{3, 1}] = y;
+            result[{3, 2}] = z;
+            return  result;
         }
+
 
         static Mat4 Scale(flt x, flt y, flt z)
         {
-            Mat4 Result(1);
+            Mat4 result(1);
 
-            Result[{0, 0}] = x;
-            Result[{1, 1}] = y;
-            Result[{2, 2}] = z;
-            return  Result;
+            result[{0, 0}] = x;
+            result[{1, 1}] = y;
+            result[{2, 2}] = z;
+            return  result;
         }
 
         static Mat4 RotationX(flt radians)
         {
-            Mat4 Result(1);
+            Mat4 result(1);
 
-            Result[{1, 1}] = std::cos(radians);
-            Result[{2, 1}] = -std::sin(radians);
-            Result[{1, 2}] = std::sin(radians);
-            Result[{2, 2}] = std::cos(radians);
-            return  Result;
+            result[{1, 1}] = std::cos(radians);
+            result[{2, 1}] = -std::sin(radians);
+            result[{1, 2}] = std::sin(radians);
+            result[{2, 2}] = std::cos(radians);
+            return  result;
         }
 
         static Mat4 RotationY(flt radians)
         {
-            Mat4 Result(1);
+            Mat4 result(1);
 
-            Result[{0, 0}] = std::cos(radians);
-            Result[{0, 2}] = std::sin(radians);
-            Result[{2, 0}] = -std::sin(radians);
-            Result[{2, 2}] = std::cos(radians);
-            return  Result;
+            result[{0, 0}] = std::cos(radians);
+            result[{0, 2}] = std::sin(radians);
+            result[{2, 0}] = -std::sin(radians);
+            result[{2, 2}] = std::cos(radians);
+            return  result;
         }
 
         static Mat4 RotationZ(flt radians)
         {
-            Mat4 Result(1);
+            Mat4 result(1);
 
-            Result[{0, 0}] = std::cos(radians);
-            Result[{0, 1}] = -std::sin(radians);
-            Result[{1, 0}] = std::sin(radians);
-            Result[{1, 1}] = std::cos(radians);
-            return  Result;
+            result[{0, 0}] = std::cos(radians);
+            result[{0, 1}] = -std::sin(radians);
+            result[{1, 0}] = std::sin(radians);
+            result[{1, 1}] = std::cos(radians);
+            return  result;
         }
+        
+        Vector4 operator*(const Vector4& vec4) const {
+            Vector4 result;
+            result.x = vec4.x * grid[0][0] + vec4.y * grid[1][0] + vec4.z * grid[2][0] + vec4.w * grid[3][0];
+            result.y = vec4.x * grid[0][1] + vec4.y * grid[1][1] + vec4.z * grid[2][1] + vec4.w * grid[3][1];
+            result.z = vec4.x * grid[0][2] + vec4.y * grid[1][2] + vec4.z * grid[2][2] + vec4.w * grid[3][2];
+            result.w = vec4.x * grid[0][3] + vec4.y * grid[1][3] + vec4.z * grid[2][3] + vec4.w * grid[3][3];
 
+            return result;
+        }
     };
 }

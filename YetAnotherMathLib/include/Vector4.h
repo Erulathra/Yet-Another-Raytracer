@@ -1,15 +1,15 @@
 #pragma once
 
 #include <cmath>
-#include <exception>
 #include <ostream>
 #include <sstream>
 #include <string>
-#include <type_traits>
-#include "Mat4.h"
-#include "Vector3.h"
+
+#include "Defines.h"
 
 namespace YAM{
+    class Vector3;
+    
     class Vector4 {
     private:
         flt x;
@@ -19,6 +19,8 @@ namespace YAM{
 
     public:
         Vector4() : x(0), y(0), z(0), w(0) {};
+        explicit Vector4(flt x) : x(x), y(x), z(x), w(x) {};
+        Vector4(const Vector3& vec3, flt w);
         Vector4(flt x, flt y, flt z, flt w) : x(x), y(y), z(z), w(w) {}
 
         flt Length() const { return std::sqrt(x * x + y * y + z * z + w * w); }
@@ -26,7 +28,7 @@ namespace YAM{
         Vector4 Normal() const {
             double length = this->Length();
             if (length < std::numeric_limits<float>::min())
-                return {0.};
+                return Vector4{0.};
 
             return *this / length;
         }
@@ -83,16 +85,6 @@ namespace YAM{
             return result;
         }
 
-        Vector4 operator*(const Mat4& matrix) const {
-            Vector4 result;
-            result.x = x * matrix[{0, 0}] + y * matrix[{0, 1}] + z * matrix[{0, 2}] + w * matrix[{0, 3}];
-            result.y = x * matrix[{1, 0}] + y * matrix[{1, 1}] + z * matrix[{1, 2}] + w * matrix[{1, 3}];
-            result.z = x * matrix[{2, 0}] + y * matrix[{2, 1}] + z * matrix[{2, 2}] + w * matrix[{2, 3}];
-            result.w = x * matrix[{3, 0}] + y * matrix[{3, 1}] + z * matrix[{3, 2}] + w * matrix[{3, 3}];
-
-            return result;
-        }
-
         Vector4 operator/(flt const& scalar) const {
             Vector4 result;
             result.x = this->x / scalar;
@@ -104,7 +96,7 @@ namespace YAM{
 
         void operator*=(flt const& scalar) { *this = *this * scalar; }
         void operator/=(flt const& scalar) { *this = *this / scalar; }
-        bool operator==(const Vector4& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z && w = rhs.w; }
+        bool operator==(const Vector4& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w; }
         bool operator!=(const Vector4& rhs) const { return !(rhs == *this); }
 
         friend std::ostream& operator<<(std::ostream& os, const Vector4& vector4) {
@@ -117,5 +109,8 @@ namespace YAM{
             result << *this;
             return result.str();
         }
+        
+        friend class Mat4;
+        friend class Vector3;
     };
 } // namespace SG

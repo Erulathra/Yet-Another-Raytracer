@@ -57,3 +57,7 @@ bool MeshRenderable::Trace(const YAM::Ray& ray, RenderHitInfo& outHit) {
 
     return wasHit;
 }
+
+void MeshRenderable::Transform(const YAM::Mat4& mat4) {
+    mesh.Transform(mat4);
+}

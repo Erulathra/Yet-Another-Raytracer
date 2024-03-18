@@ -2,8 +2,11 @@
 
 #include <cstdint>
 #include <fstream>
+#include <spdlog/spdlog.h>
 
-#include "spdlog/spdlog.h"
+#include "Vector4.h"
+#include "Vector3.h"
+#include "Mat4.h"
 
 namespace YAR{
     Mesh::Mesh(const std::string& path) {
@@ -93,5 +96,22 @@ namespace YAR{
             boudingBox.max.y = std::max(boudingBox.max.y, vertex.y);
             boudingBox.max.z = std::max(boudingBox.max.z, vertex.z);
         }
+    }
+
+    void Mesh::Transform(const YAM::Mat4& mat) {
+        YAM::Mat4 normalTranslation = mat.ClearTranslation().Inverse().Transpose();
+        
+        for (YAM::Triangle& triange : trianges) {
+            triange.posA = YAM::Vector3(mat * YAM::Vector4(triange.posA, 1.f));
+            triange.posB = YAM::Vector3(mat * YAM::Vector4(triange.posB, 1.f));
+            triange.posC = YAM::Vector3(mat * YAM::Vector4(triange.posC, 1.f));
+            
+            triange.norA = YAM::Vector3(normalTranslation * YAM::Vector4(triange.norA, 1.f));
+            triange.norB = YAM::Vector3(normalTranslation * YAM::Vector4(triange.norB, 1.f));
+            triange.norC = YAM::Vector3(normalTranslation * YAM::Vector4(triange.norC, 1.f));
+        }
+
+        boudingBox.min = YAM::Vector3(mat * YAM::Vector4(boudingBox.min, 1.f));
+        boudingBox.max = YAM::Vector3(mat * YAM::Vector4(boudingBox.max, 1.f));
     }
 } // YAR

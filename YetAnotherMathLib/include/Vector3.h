@@ -7,6 +7,8 @@
 #include <string>
 #include <algorithm>
 
+#include "Vector4.h"
+
 namespace YAM{
     class Vector3 {
     public:
@@ -20,6 +22,8 @@ namespace YAM{
 
         Vector3(flt X, flt Y, flt Z) : x(X), y(Y), z(Z) {}
 
+        explicit Vector3(const Vector4& vec4);
+        
         flt Length() const { return std::sqrt(x * x + y * y + z * z); }
         flt SquaredLength() const { return x * x + y * y + z * z; }
 
@@ -140,5 +144,7 @@ namespace YAM{
             result << *this;
             return result.str();
         }
+        
+        friend class Vector4;
     };
 } // namespace SG
