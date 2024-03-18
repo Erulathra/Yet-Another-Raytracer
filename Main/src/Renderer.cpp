@@ -46,7 +46,6 @@ namespace YAR{
             renderBounds.maxX = renderBounds.minX + colorBuffer->GetSizeX() / tilesPerRow;
             renderBounds.maxY = renderBounds.minY + colorBuffer->GetSizeY() / tilesPerRow;
 
-            spdlog::info("Rendering: ({}, {}) to ({}, {})", renderBounds.minX, renderBounds.minY, renderBounds.maxX, renderBounds.maxY);
             RenderWorker(camera, renderBounds);
             
             ++finishedTiles;

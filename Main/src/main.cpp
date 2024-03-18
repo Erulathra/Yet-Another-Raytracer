@@ -1,3 +1,4 @@
+#include "Algorithms.h"
 #include "Camera.h"
 #include "Renderable.h"
 #include "Renderer.h"
@@ -6,8 +7,10 @@
 void ExerciseOne();
 
 int main(int argc, char* argv[]) {
+    YAM::Algorithms::SetRandomSeed(time(nullptr));
+    
     // uint32_t resX = 1024, resY = 1024;
-    uint32_t resX = 64, resY = 64;
+    uint32_t resX = 512, resY = 512;
     
     YAR::Renderer renderer{resX, resY};
 
@@ -92,7 +95,7 @@ void ExerciseOne() {
         spdlog::info("R3 and P: {}", result.str());
     }
 
-    YAM::Triangle triangle{{0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}};
+    YAM::Triangle triangle{{0.f, 0.f, 0.f}, {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}};
     YAM::Ray R4 = YAM::Ray::FromTwoPoints({-1, 0.5, 0}, {1, 0.5, 0});
 
     if (YAM::LinearMath::FindIntersection(R4, triangle, hitInfo)) {
@@ -102,6 +105,6 @@ void ExerciseOne() {
     YAM::Ray R5 = YAM::Ray::FromTwoPoints({2, -1, 0}, {2, 2, 0});
     spdlog::info("R5 and Triangle: {}", YAM::LinearMath::FindIntersection(R5, triangle, hitInfo));
     
-    YAM::Ray R6 = YAM::Ray::FromTwoPoints({0, 0, -1}, {0, 0, 1});
+    YAM::Ray R6 = YAM::Ray::FromTwoPoints( {0, 0, 1}, {0, 0, -1});
     spdlog::info("R6 and Triangle: {}", YAM::LinearMath::FindIntersection(R6, triangle, hitInfo));
 }
