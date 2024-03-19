@@ -65,7 +65,7 @@ namespace YAR{
         // add small jitter to allow SMAA
         flt jitterX, jitterY;
         Algorithms::RandomPointInCircle(jitterX, jitterY);
-        constexpr flt jitterStrenth = 1.f;
+        constexpr flt jitterStrenth = 0.5f;
 
         const Vector3 scrrenOffset
             = screenStepX * (static_cast<flt>(x) + jitterX * jitterStrenth) * screenRight

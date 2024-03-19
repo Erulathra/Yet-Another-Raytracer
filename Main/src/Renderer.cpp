@@ -14,6 +14,7 @@ namespace YAR{
     Renderer::Renderer(uint32_t sizeX, uint32_t sizeY)
         : colorBufferMutex()
           , samplesPerPixel(8)
+          , bVariableSamplesPerPixel(true)
           , tilesPerRow(8) {
         colorBuffer = std::make_unique<YAR::Buffer>(sizeX, sizeY);
     }
@@ -73,7 +74,7 @@ namespace YAR{
                     numSamples++;
                 }
 
-                if ((samples[0] - samples[i]).Length() > SmallFloat) {
+                if (!bVariableSamplesPerPixel || (samples[0] - samples[i]).Length() > SmallFloat) {
                     for (int sampleID = 2; sampleID < numSamples; ++sampleID) {
                         samples[sampleID] = SamplePixel(camera, i, j);
                         numSamples++;

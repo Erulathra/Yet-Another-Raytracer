@@ -30,6 +30,8 @@ namespace YAR{
         std::vector<std::shared_ptr<Renderable>> renderables;
 
         uint32_t samplesPerPixel;
+        bool bVariableSamplesPerPixel;
+        
         uint32_t tilesPerRow;
 
         std::shared_ptr<Camera> camera;
