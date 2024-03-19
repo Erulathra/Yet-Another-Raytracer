@@ -63,12 +63,12 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<YAR::SphereRenderable> sphereTwo = std::make_shared<YAR::SphereRenderable>(red, sphere);
     renderer.AddRenderable(sphereTwo);
     
-    // YAR::Material material{};
-    // material.color.hex = 0xffffffff;
-    // std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
-    // YAM::Mat4 transform = YAM::Mat4::Scale(0.25f, 0.25f, 0.25f) * YAM::Mat4::RotationY(YAM::ToRad(180.f)) * YAM::Mat4::Translation(0.f, 0.f, -0.3f);
-    // renderable->Transform(transform);
-    // renderer.AddRenderable(renderable);
+    YAR::Material material{};
+    material.color.hex = 0xffffffff;
+    std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
+    YAM::Mat4 transform = YAM::Mat4::Translation(0.5f, 0.2f, 0.f) * YAM::Mat4::RotationY(YAM::ToRad(180.f)) * YAM::Mat4::Scale(0.2f, 0.2, 0.2) ;
+    renderable->Transform(transform);
+    renderer.AddRenderable(renderable);
 
     CreateCornerBox(renderer);
     

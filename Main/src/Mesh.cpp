@@ -66,17 +66,19 @@ namespace YAR{
         }
 
         // create triangles
-        for (int triangleID = 0; triangleID < (vert_indicies.size() / 3); ++triangleID) {
+        spdlog::info("{} {}", vert_indicies.size(), norm_indicies.size());
+        
+        for (int triangleID = 0; triangleID < std::trunc(vert_indicies.size() / 3); ++triangleID) {
             uint32_t indiceID = triangleID * 3;
             
-            uint32_t v1 = vert_indicies[indiceID] - 1;
-            uint32_t v2 = vert_indicies[indiceID + 1] - 1;
-            uint32_t v3 = vert_indicies[indiceID + 2] - 1;
+            const uint32_t v1 = vert_indicies[indiceID] - 1;
+            const uint32_t v2 = vert_indicies[indiceID + 1] - 1;
+            const uint32_t v3 = vert_indicies[indiceID + 2] - 1;
             
-            uint32_t n1 = norm_indicies[indiceID] - 1;
-            uint32_t n2 = norm_indicies[indiceID + 1] - 1;
-            uint32_t n3 = norm_indicies[indiceID + 2] - 1;
-            
+            const uint32_t n1 = norm_indicies[indiceID] - 1;
+            const uint32_t n2 = norm_indicies[indiceID + 1] - 1;
+            const uint32_t n3 = norm_indicies[indiceID + 2] - 1;
+
             trianges.emplace_back(
                 verticies[v1],verticies[v2],verticies[v3],
                 normals[n1],normals[n2],normals[n3]
