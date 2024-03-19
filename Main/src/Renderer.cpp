@@ -58,46 +58,70 @@ namespace YAR{
     }
 
     void Renderer::RenderWorker(const Camera* camera, const RenderBounds& renderBounds) const {
+        std::vector<Vector3> samples;
+        samples.resize(samplesPerPixel);
+        
         for (uint32_t i = renderBounds.minY; i < renderBounds.maxY; ++i) {
             for (uint32_t j = renderBounds.minX; j < renderBounds.maxX; ++j) {
-                Vector3 pixelColor{0.f};
-                
-                for (int sampleID = 0; sampleID < samplesPerPixel; ++sampleID) {
-                    
-                    Ray ray = camera->GetRay(j, i);
+                for (Vector3& sample : samples) {
+                    sample = Vector3{0.f};
+                }
 
-                    RenderHitInfo closestHit;
-                    closestHit.distance = std::numeric_limits<float>::max();
+                uint32_t numSamples = 0;
+                for (uint32_t sampleID = 0; sampleID < 2; ++sampleID) {
+                    samples[sampleID] = SamplePixel(camera, i, j);
+                    numSamples++;
+                }
 
-                    bool wasIntersection = false;
-
-                    for (const std::shared_ptr<Renderable>& renderable : renderables) {
-                        if (RenderHitInfo hitInfo; renderable->Trace(ray, hitInfo)) {
-                            if (hitInfo.distance < closestHit.distance) {
-                                closestHit = hitInfo;
-                                wasIntersection = true;
-                            }
-                        }
+                if ((samples[0] - samples[i]).Length() > SmallFloat) {
+                    for (int sampleID = 2; sampleID < numSamples; ++sampleID) {
+                        samples[sampleID] = SamplePixel(camera, i, j);
+                        numSamples++;
                     }
+                }
 
-                    if (wasIntersection) {
-                        const Vector3 lightDir = {-1.f, -1.f, 1.f};
-
-                        const Vector3 objColor = closestHit.material->color.ToVector();
-                        const float lightDotNorm = std::max(0.f, Vector3::Dot(closestHit.normal, -lightDir.Normal()));
-                        const float lightValue = std::min(1.f, lightDotNorm + 0.1f);
-                        pixelColor += objColor * lightValue;
-                    }
-                        
+                Vector3 finalColor = Vector3{0};
+                for (uint32_t sampleID = 0; sampleID < numSamples; ++sampleID) {
+                    finalColor += samples[sampleID];
                 }
                 
                 {
                     std::scoped_lock lock{colorBufferMutex};
-                    colorBuffer->SetPix(j, i, Color::FromVector(pixelColor / static_cast<flt>(samplesPerPixel)).hex);
+                    colorBuffer->SetPix(j, i, Color::FromVector(finalColor / static_cast<flt>(numSamples)).hex);
                 }
             }
         }
     }
+    
+    Vector3 Renderer::SamplePixel(const Camera* camera, uint32_t y, uint32_t x) const {
+        const Ray ray = camera->GetRay(x, y);
+
+        RenderHitInfo closestHit;
+        closestHit.distance = std::numeric_limits<float>::max();
+
+        bool wasIntersection = false;
+
+        for (const std::shared_ptr<Renderable>& renderable : renderables) {
+            if (RenderHitInfo hitInfo; renderable->Trace(ray, hitInfo)) {
+                if (hitInfo.distance < closestHit.distance) {
+                    closestHit = hitInfo;
+                    wasIntersection = true;
+                }
+            }
+        }
+
+        if (wasIntersection) {
+            const Vector3 lightDir = {-1.f, -1.f, 1.f};
+
+            const Vector3 objColor = closestHit.material->color.ToVector();
+            const float lightDotNorm = std::max(0.f, Vector3::Dot(closestHit.normal, -lightDir.Normal()));
+            const float lightValue = std::min(1.f, lightDotNorm + 0.1f);
+            return objColor * lightValue;
+        }
+
+        return Vector3{0};
+    }
+
 
     RenderBounds::RenderBounds()
         : minX(0)

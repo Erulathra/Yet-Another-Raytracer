@@ -245,14 +245,14 @@ namespace YAM{
             const Vector3 daRayPoint = Vector3::Cross(aRayPoint, ray.direction);
 
             const flt det = -Vector3::Dot(ray.direction, triangleNormal);
-            if (det < SmallNumber)
+            if (det < SmallFloat)
                 return false;
 
             const flt invDet = 1 / det;
 
             // Calculate distance to triangle
             const flt distance = Vector3::Dot(aRayPoint, triangleNormal) * invDet;
-            if (distance < SmallNumber)
+            if (distance < SmallFloat)
                 return false;
 
             // Calculate baricentric cooridinates

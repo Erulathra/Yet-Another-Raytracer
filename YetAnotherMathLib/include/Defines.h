@@ -3,5 +3,5 @@
 namespace YAM {
     typedef float flt;
 
-    constexpr flt SmallNumber = 1e-6;
+    constexpr flt SmallFloat = 1e-6;
 }

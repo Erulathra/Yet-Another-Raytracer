@@ -29,7 +29,7 @@ namespace YAM{
 
         Vector3 Normal() const {
             const double length = this->Length();
-            if (length < SmallNumber)
+            if (length < SmallFloat)
                 return Vector3{0.};
 
             return *this / length;
@@ -45,7 +45,7 @@ namespace YAM{
             return result;
         }
 
-        bool IsNear(const Vector3& vector3, flt error = SmallNumber) const {
+        bool IsNear(const Vector3& vector3, flt error = SmallFloat) const {
             return std::abs(this->Length() - vector3.Length()) < error;
         }
 

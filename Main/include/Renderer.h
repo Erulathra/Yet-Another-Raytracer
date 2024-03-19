@@ -5,6 +5,8 @@
 #include <mutex>
 #include <vector>
 
+#include "Vector3.h"
+
 namespace YAR{
     struct RenderBounds {
         uint32_t minX;
@@ -40,6 +42,7 @@ namespace YAR{
 
         void Render(const Camera* camera) const;
         void Save(const std::string& path) const;
+        YAM::Vector3 SamplePixel(const Camera* camera, uint32_t y, uint32_t x) const;
 
     private:
         void RenderWorker(const Camera* camera, const RenderBounds& renderBounds) const;
