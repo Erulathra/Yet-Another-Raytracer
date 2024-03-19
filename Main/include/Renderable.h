@@ -5,6 +5,10 @@
 namespace YAR{
     struct Material {
         YAM::Color color;
+        YAM::Color emisiveColor;
+        float emmision;
+
+        Material();
     };
 
     struct RenderHitInfo : public YAM::HitInfo {

@@ -1,9 +1,12 @@
 #pragma once
 #include <cstdint>
-#include <vector>
 
 #include "Defines.h"
 #include "LinearMath.h"
+
+namespace YAM{
+    class Random;
+}
 
 namespace YAR{
     class Camera {
@@ -23,7 +26,7 @@ namespace YAR{
               , resolutionY(resolutionY) {}
 
         virtual ~Camera() = default;
-        virtual YAM::Ray GetRay(uint32_t X, uint32_t Y) const = 0;
+        virtual YAM::Ray GetRay(uint32_t X, uint32_t Y, const YAM::Random& random) const = 0;
     };
 
     class OrthoCamera : public Camera {
@@ -37,7 +40,7 @@ namespace YAR{
 
         ~OrthoCamera() override;
 
-        YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
+        YAM::Ray GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const override;
     };
 
     class PerspectiveCamera : public Camera {
@@ -55,7 +58,7 @@ namespace YAR{
 
         ~PerspectiveCamera() override;
 
-        YAM::Ray GetRay(uint32_t x, uint32_t y) const override;
+        YAM::Ray GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const override;
 
     private:
         YAM::Vector3 GetScreenPosition() const;

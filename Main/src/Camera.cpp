@@ -13,7 +13,7 @@ namespace YAR{
 
     OrthoCamera::~OrthoCamera() {};
 
-    Ray OrthoCamera::GetRay(uint32_t x, uint32_t y) const {
+    Ray OrthoCamera::GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const {
         const flt stepX = orthoSizeX / resolutionX;
         const flt stepY = orthoSizeY / resolutionY;
 
@@ -27,7 +27,7 @@ namespace YAR{
             + (screenUp * (orthoSizeY * 0.5f));
         
         flt jitterX, jitterY;
-        Algorithms::RandomPointInCircle(jitterX, jitterY);
+        random.RandomPointInCircle(jitterX, jitterY);
         constexpr flt jitterStrenth = 0.5f;
 
         Vector3 screenOffset = (stepX * screenRight * (static_cast<flt>(x) + jitterX * jitterStrenth))
@@ -48,7 +48,7 @@ namespace YAR{
 
     PerspectiveCamera::~PerspectiveCamera() = default;
 
-    Ray PerspectiveCamera::GetRay(uint32_t x, uint32_t y) const {
+    Ray PerspectiveCamera::GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const {
         const Vector3 screenRight = -direction.Cross({0., 1., 0.}).Normal();
         const Vector3 screenUp = -direction.Cross(screenRight).Normal();
 
@@ -62,16 +62,15 @@ namespace YAR{
         const flt screenStepX = nearPlaneWidth / resolutionX;
         const flt screenStepY = nearPlaneHeight / resolutionY;
 
-        // add small jitter to allow SMAA
         flt jitterX, jitterY;
-        Algorithms::RandomPointInCircle(jitterX, jitterY);
-        constexpr flt jitterStrenth = 0.5f;
+        random.RandomPointInCircle(jitterX, jitterY);
+        constexpr flt jitterStrenth = 5.f;
 
         const Vector3 scrrenOffset
-            = screenStepX * (static_cast<flt>(x) + jitterX * jitterStrenth) * screenRight
-            + screenStepY * (static_cast<flt>(y) + jitterY * jitterStrenth) * screenDown;
+            = screenStepX * static_cast<flt>(x) * screenRight
+            + screenStepY * static_cast<flt>(y) * screenDown;
 
-        return Ray::FromTwoPoints(position, screenStart + scrrenOffset);
+        return Ray::FromTwoPoints(position , screenStart + scrrenOffset);
     }
 
     Vector3 PerspectiveCamera::GetScreenPosition() const {

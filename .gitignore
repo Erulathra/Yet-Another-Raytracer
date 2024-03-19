@@ -4,3 +4,4 @@ cmake-build-debug
 build/
 Lib/include/test.h
 cmake-build-vs/
+cmake-build-*

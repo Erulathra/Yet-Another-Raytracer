@@ -35,12 +35,10 @@ void CreateCornerBox(YAR::Renderer& renderer) {
 }
 
 int main(int argc, char* argv[]) {
-    YAM::Algorithms::SetRandomSeed(time(nullptr));
-    
     uint32_t resX = 512, resY = 512;
     // uint32_t resX = 64, resY = 64;
     
-    YAR::Renderer renderer{resX, resY};
+    YAR::Renderer renderer{resX, resY, 512, 16, 8};
 
     YAM::Vector3 cameraPosition(0.f, 0.f, -3.f);
     YAM::Vector3 cameraDirection = YAM::Vector3{0.f} - cameraPosition;
@@ -48,15 +46,20 @@ int main(int argc, char* argv[]) {
 
     YAR::Material blue{};
     blue.color.hex = 0xff0000ff;
-
-    YAM::Sphere sphere {YAM::Vector3{-0.4f, -0.5f, 0.f}, 0.5f};
-    std::shared_ptr<YAR::SphereRenderable> sphereOne = std::make_shared<YAR::SphereRenderable>(blue, sphere);
-    renderer.AddRenderable(sphereOne);
     
     YAR::Material red{};
     red.color.hex = 0xffff0000;
     
-    sphere = {YAM::Vector3{0.5f, 0.5f, 0.f}, 0.2f};
+    YAR::Material emmisiveWhite{};
+    emmisiveWhite.color.hex = 0xff000000;
+    emmisiveWhite.emisiveColor.hex = 0xffffffff;
+    emmisiveWhite.emmision = 2.f;
+
+    YAM::Sphere sphere {YAM::Vector3{-0.3f, 0.3f, 0.f}, 0.5f};
+    std::shared_ptr<YAR::SphereRenderable> sphereOne = std::make_shared<YAR::SphereRenderable>(emmisiveWhite, sphere);
+    renderer.AddRenderable(sphereOne);
+    
+    sphere = {YAM::Vector3{0.5f, -0.5f, 0.f}, 0.2f};
     std::shared_ptr<YAR::SphereRenderable> sphereTwo = std::make_shared<YAR::SphereRenderable>(red, sphere);
     renderer.AddRenderable(sphereTwo);
     
@@ -71,9 +74,9 @@ int main(int argc, char* argv[]) {
     
     // std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::OrthoCamera>(
     //     resX, resY, cameraPosition, cameraDirection, 3.f, 3.f);
-    std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::PerspectiveCamera>(
+    std::shared_ptr<YAR::Camera> camera = std::make_shared<YAR::PerspectiveCamera>(
         resX, resY, cameraPosition, cameraDirection, 1.f );
 
-    renderer.Render(camera.get());
+    renderer.Render(camera);
     renderer.Save("output.tga");
 }

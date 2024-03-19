@@ -4,6 +4,11 @@
 
 using namespace YAR;
 
+Material::Material()
+    : color({0xff000000})
+      , emisiveColor({0xff000000})
+      , emmision(0) {}
+
 RenderHitInfo::RenderHitInfo()
     : material() {}
 
@@ -38,9 +43,9 @@ bool MeshRenderable::Trace(const YAM::Ray& ray, RenderHitInfo& outHit) {
     if (!YAM::LinearMath::FindIntersection(ray, mesh.GetBoudingBox())) {
         return false;
     }
-    
+
     outHit.distance = std::numeric_limits<float>::max();
-    
+
     RenderHitInfo currentHit;
     bool wasHit = false;
 
@@ -49,7 +54,7 @@ bool MeshRenderable::Trace(const YAM::Ray& ray, RenderHitInfo& outHit) {
             if (currentHit.distance < outHit.distance) {
                 outHit = currentHit;
                 outHit.material = &GetMaterial();
-                
+
                 wasHit = true;
             }
         }

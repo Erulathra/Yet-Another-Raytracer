@@ -3,7 +3,6 @@
 #include "Vector3.h"
 #include <cmath>
 #include <ostream>
-#include <vector>
 #include <cstdint>
 
 #include "spdlog/spdlog.h"
@@ -13,6 +12,13 @@ namespace YAM{
 #define M_1_180 (1. / 180.)
     static flt ToDeg(flt rad) { return static_cast<flt>(rad * 180. * M_1_PI); }
     static flt ToRad(flt deg) { return static_cast<flt>(deg * M_PI * M_1_180); }
+    
+    static flt Sign(flt x) {
+        if (x > 0.f) {
+            return 1.f;
+        }
+        return x < SmallFloat ? 0 : -1;
+    }
 
     struct Ray {
         Vector3 direction;
@@ -267,7 +273,6 @@ namespace YAM{
 
                 return true;
             }
-
 
             return false;
         }

@@ -8,6 +8,14 @@
 #include "Vector3.h"
 
 namespace YAR{
+    struct RenderHitInfo;
+}
+
+namespace YAM{
+    struct Ray;
+}
+
+namespace YAR{
     struct RenderBounds {
         uint32_t minX;
         uint32_t minY;
@@ -26,27 +34,29 @@ namespace YAR{
     private:
         std::unique_ptr<Buffer> colorBuffer;
         mutable std::mutex colorBufferMutex;
+        mutable std::mutex fileIOMutex;
 
         std::vector<std::shared_ptr<Renderable>> renderables;
 
         uint32_t samplesPerPixel;
-        bool bVariableSamplesPerPixel;
-        
+        uint32_t maxBounces;
         uint32_t tilesPerRow;
 
         std::shared_ptr<Camera> camera;
 
     public:
-        Renderer(uint32_t sizeX, uint32_t sizeY);
+        Renderer(uint32_t sizeX, uint32_t sizeY, uint32_t samplesPerPixel, uint32_t maxBounces, uint32_t tilesPerRow);
         ~Renderer();
 
         void AddRenderable(const std::shared_ptr<Renderable>& renderable);
 
-        void Render(const Camera* camera) const;
+        void Render(const std::shared_ptr<YAR::Camera> camera);
         void Save(const std::string& path) const;
-        YAM::Vector3 SamplePixel(const Camera* camera, uint32_t y, uint32_t x) const;
 
-    private:
-        void RenderWorker(const Camera* camera, const RenderBounds& renderBounds) const;
+        uint32_t GetSamplesPerPixel() const { return samplesPerPixel; }
+        uint32_t GetMaxBounces() const { return maxBounces; }
+        uint32_t GetTilesPerRow() const { return tilesPerRow; }
+
+        friend class RenderWorker;
     };
 } // SG

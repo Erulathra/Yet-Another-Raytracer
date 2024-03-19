@@ -100,6 +100,14 @@ namespace YAM{
             return result;
         }
 
+        Vector3 Mul(const Vector3& another) const {
+            Vector3 result;
+            result.x = this->x * another.x;
+            result.y = this->y * another.y;
+            result.z = this->z * another.z;
+            return result;
+        }
+
         void operator+=(Vector3 const& another) { *this = *this + another; }
         void operator-=(Vector3 const& another) { *this = *this - another; }
 

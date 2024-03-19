@@ -4,30 +4,42 @@
 #include <cstdint>
 
 #include "Defines.h"
+#include "LinearMath.h"
+#include "Vector3.h"
 
 namespace YAM{
     class Algorithms {
     private:
-        inline static uint32_t seed;
-        
+
+
     public:
-        static void SetRandomSeed(uint32_t newSeed) {
+    };
+
+    class Random {
+    private:
+        mutable uint32_t seed;
+
+    public:
+        explicit Random()
+            : seed(time(nullptr)) {}
+
+
+        void SetRandomSeed(uint32_t newSeed) const {
             seed = newSeed;
         }
 
-        static uint32_t RandInt() {
+        uint32_t RandInt() const {
             // implements fast Wang-Hash
-            seed = (seed ^ 61) ^ (seed >> 16);
-            seed *= 9;
-            seed *= seed ^ (seed >> 4);
-            seed *= 0x27d4eb2d;
+            seed = (seed ^ 61U) ^ (seed >> 16U);
+            seed = seed * 9U;
+            seed = seed ^ (seed >> 4);
+            seed = seed * 0x27d4eb2dU;
             seed = seed ^ (seed >> 15);
-
             return seed;
         }
-        
-        static void RandomPointInCircle(flt& x, flt& y) {
-            const flt angle = RandFloat() * 2 * M_PI;
+
+        void RandomPointInCircle(flt& x, flt& y) const {
+            const flt angle = RandFloatNormal() * 2 * M_PI;
             x = std::cos(angle);
             y = std::sin(angle);
 
@@ -35,8 +47,33 @@ namespace YAM{
             y *= std::sqrt(RandFloat());
         }
 
-        static flt RandFloat() {
-            return rand() / static_cast<flt>(std::numeric_limits<uint32_t>::max());
+        Vector3 RandomHemisphereDirection(const Vector3& normal) const {
+            Vector3 result;
+            result.x = RandFloatNormal();
+            result.y = RandFloatNormal();
+            result.z = RandFloatNormal();
+
+            result = result.Normal();
+
+            if (normal.Dot(result) < 0.f) {
+                result *= -1.f;
+            }
+
+            return result;
+        }
+
+        float RandFloatNormal() const {
+            const flt randFloat = RandFloat();
+            const flt theta = 2.f * M_PI * randFloat;
+            const flt rho = std::sqrt(-2.f * std::log(randFloat));
+
+            return rho * std::cos(theta);
+        }
+
+        static constexpr flt one_randMax = 1. / 0xFFFFFFFFU;
+
+        flt RandFloat() const {
+            return static_cast<flt>(RandInt()) * one_randMax;
         }
     };
 }
