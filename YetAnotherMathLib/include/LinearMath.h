@@ -167,8 +167,13 @@ namespace YAM{
         }
 
         static bool FindIntersection(const Ray& line, const Plane& plane, Vector3& result) {
+            const float dirDotNormal = line.direction.Dot(plane.normalVector);
+            if (dirDotNormal >= 1.f) {
+                return false;
+            }
+            
             const flt distance = plane.normalVector.Dot(plane.point) * -1.f;
-            const flt t = -(line.point.Dot(plane.normalVector) + distance) / line.direction.Dot(plane.normalVector);
+            const flt t = -(line.point.Dot(plane.normalVector) + distance) / dirDotNormal;
             result = line.point + (line.direction * t);
             return true;
         }
