@@ -24,7 +24,7 @@ namespace YAR{
         void FillColor(uint32_t color);
         void FillDepth(float value);
 
-#define CALCULATE_COORDS (x + sizeX * ((sizeY - 1) - y))
+#define CALCULATE_COORDS (x + sizeX * y)
 
         uint32_t GetPix(uint32_t x, uint32_t y) const { return colorBuf[CALCULATE_COORDS]; }
         void SetPix(uint32_t x, uint32_t y, uint32_t color) { colorBuf[CALCULATE_COORDS] = color; }

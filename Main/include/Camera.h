@@ -41,7 +41,6 @@ namespace YAR{
     };
 
     class PerspectiveCamera : public Camera {
-        YAM::flt fieldOfView;
         YAM::flt nearPlaneDistance;
 
         YAM::Vector3 screenPosition;
@@ -52,7 +51,7 @@ namespace YAR{
     public:
         PerspectiveCamera(int32_t resolutionX, int32_t resolutionY,
                           const YAM::Vector3& position, const YAM::Vector3& direction,
-                          YAM::flt fieldOfView, YAM::flt nearPlaneDistance);
+                          YAM::flt nearPlaneDistance);
 
         ~PerspectiveCamera() override;
 
