@@ -21,7 +21,11 @@ namespace YAM{
 
     public:
         explicit Random()
-            : seed(time(nullptr)) {}
+            : Random(time(nullptr)) {}
+        
+        Random(uint32_t seed) {
+            this->seed = seed;
+        }
 
 
         void SetRandomSeed(uint32_t newSeed) const {
@@ -39,12 +43,11 @@ namespace YAM{
         }
 
         void RandomPointInCircle(flt& x, flt& y) const {
-            const flt angle = RandFloatNormal() * 2 * M_PI;
-            x = std::cos(angle);
-            y = std::sin(angle);
-
-            x *= std::sqrt(RandFloat());
-            y *= std::sqrt(RandFloat());
+            const flt angle = RandFloat() * 2. * M_PI;
+            const flt radius = std::sqrt(RandFloat());
+            
+            x = radius * std::cos(angle);
+            y = radius * std::sin(angle);
         }
 
         Vector3 RandomHemisphereDirection(const Vector3& normal) const {
@@ -56,16 +59,15 @@ namespace YAM{
             result = result.Normal();
 
             if (normal.Dot(result) < 0.f) {
-                result *= -1.f;
+                return result * -1.f;
             }
 
             return result;
         }
 
-        float RandFloatNormal() const {
-            const flt randFloat = RandFloat();
-            const flt theta = 2.f * M_PI * randFloat;
-            const flt rho = std::sqrt(-2.f * std::log(randFloat));
+        flt RandFloatNormal() const {
+            const flt theta = 2.f * M_PI * RandFloat();
+            const flt rho = std::sqrt(-2.f * std::log(RandFloat()));
 
             return rho * std::cos(theta);
         }

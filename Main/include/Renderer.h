@@ -42,6 +42,7 @@ namespace YAR{
         uint32_t maxBounces;
         uint32_t tilesPerRow;
 
+
         std::shared_ptr<Camera> camera;
 
     public:

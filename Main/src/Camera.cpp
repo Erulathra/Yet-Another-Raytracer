@@ -64,11 +64,13 @@ namespace YAR{
 
         flt jitterX, jitterY;
         random.RandomPointInCircle(jitterX, jitterY);
-        constexpr flt jitterStrenth = 5.f;
+        constexpr flt jitterStrenth = 2.f;
+        jitterX *= jitterStrenth;
+        jitterY *= jitterStrenth;
 
         const Vector3 scrrenOffset
-            = screenStepX * static_cast<flt>(x) * screenRight
-            + screenStepY * static_cast<flt>(y) * screenDown;
+            = screenStepX * (static_cast<flt>(x) + jitterX) * screenRight
+            + screenStepY * (static_cast<flt>(y) + jitterY) * screenDown;
 
         return Ray::FromTwoPoints(position , screenStart + scrrenOffset);
     }

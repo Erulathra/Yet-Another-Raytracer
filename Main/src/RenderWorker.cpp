@@ -6,7 +6,9 @@
 
 namespace YAR{
     RenderWorker::RenderWorker(Renderer& owner, const std::shared_ptr<Camera>& camera, const RenderBounds& renderBounds)
-    : owner(owner), camera(camera), renderBounds(renderBounds) {}
+    : owner(owner), camera(camera), renderBounds(renderBounds) {
+        random.SetRandomSeed(renderBounds.minX + renderBounds.minY * owner.colorBuffer->GetSizeX() + 195487);
+    }
 
     void RenderWorker::StartRender() const {
         uint32_t samplesPerPixel = owner.GetSamplesPerPixel();

@@ -27,6 +27,9 @@ namespace YAR{
 
         virtual ~Camera() = default;
         virtual YAM::Ray GetRay(uint32_t X, uint32_t Y, const YAM::Random& random) const = 0;
+
+        uint32_t GetResolutionX() const { return resolutionX; }
+        uint32_t GetResolutionY() const { return resolutionY; }
     };
 
     class OrthoCamera : public Camera {
