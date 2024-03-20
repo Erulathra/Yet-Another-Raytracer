@@ -144,6 +144,10 @@ namespace YAM{
         flt distance;
     };
 
+    static Vector3 Reflect(const Vector3& dirIn, const Vector3& normal) {
+        return dirIn - 2 * Vector3::Dot(dirIn, normal) * normal;
+    }
+
 
     class LinearMath {
     public:

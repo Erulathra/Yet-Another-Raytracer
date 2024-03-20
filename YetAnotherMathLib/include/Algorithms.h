@@ -64,6 +64,15 @@ namespace YAM{
 
             return result;
         }
+        
+        Vector3 RandomDirection() const {
+            Vector3 result;
+            result.x = RandFloatNormal();
+            result.y = RandFloatNormal();
+            result.z = RandFloatNormal();
+
+            return result.Normal();
+        }
 
         flt RandFloatNormal() const {
             const flt theta = 2.f * M_PI * RandFloat();

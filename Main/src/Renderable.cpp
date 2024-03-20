@@ -7,7 +7,8 @@ using namespace YAR;
 Material::Material()
     : color({0xff000000})
       , emisiveColor({0xff000000})
-      , emmision(0) {}
+      , emmision(0)
+      , specular(0) {}
 
 RenderHitInfo::RenderHitInfo()
     : material() {}

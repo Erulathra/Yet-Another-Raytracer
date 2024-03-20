@@ -52,7 +52,11 @@ namespace YAR{
 
             if (CalculateRayCollision(ray, hitInfo)) {
                 ray.point = hitInfo.hitPoint;
-                ray.direction = random.RandomHemisphereDirection(hitInfo.normal);
+                // cosine weighted ray districution
+                const YAM::Vector3 diffuse = (hitInfo.normal + random.RandomDirection()).Normal();
+                const YAM::Vector3 specular = YAM::Reflect(ray.direction, hitInfo.normal);
+
+                ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
 
                 const Material* material = hitInfo.material;
                 
@@ -60,8 +64,10 @@ namespace YAR{
                 const YAM::Vector3 emissionColor = material->emisiveColor.ToVector();
                 
                 const YAM::Vector3 emitedLight = emissionColor * material->emmision;
+                const float lightStrenght = YAM::Vector3::Dot(hitInfo.normal, ray.direction);
+                
                 finalColor += emitedLight.Mul(rayColor);
-                rayColor = rayColor.Mul(materialColor);
+                rayColor = rayColor.Mul(materialColor) * lightStrenght;
             }
             else {
                 break;

@@ -29,52 +29,45 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     std::shared_ptr<YAR::MeshRenderable> rightRen = std::make_shared<YAR::MeshRenderable>(blueMat,"res/plane.obj");
     rightRen->Transform(rightT * wholeT);
     
+    YAM::Mat4 back = YAM::Mat4::Translation(0.f, 0.f, -1.f) * YAM::Mat4::RotationX(YAM::ToRad(90.f));
+    std::shared_ptr<YAR::MeshRenderable> backRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
+    backRen->Transform(back * wholeT);
+    
     YAR::Material whiteEmisiveMat{};
     whiteEmisiveMat.color.hex = 0xffffffff;
     whiteEmisiveMat.emisiveColor.hex = 0xffffffff;
-    whiteEmisiveMat.emmision = 0.f;
-    
-    YAM::Mat4 back = YAM::Mat4::Translation(0.f, 0.f, -1.f) * YAM::Mat4::RotationX(YAM::ToRad(90.f));
-    std::shared_ptr<YAR::MeshRenderable> backRen = std::make_shared<YAR::MeshRenderable>(whiteEmisiveMat,"res/plane.obj");
-    backRen->Transform(back * wholeT);
+    whiteEmisiveMat.emmision = 10.f;
+
+    YAM::Mat4 lampT = YAM::Mat4::Translation(0.f, 0.5f, 0.f) * YAM::Mat4::Scale(0.5f, 0.5f, 0.5f);
+    std::shared_ptr<YAR::MeshRenderable> lamp = std::make_shared<YAR::MeshRenderable>(whiteEmisiveMat,"res/cornerboxLamp.obj");
+    lamp->Transform(lampT * wholeT);
     
     renderer.AddRenderable(coreRen);
     renderer.AddRenderable(leftRen);
     renderer.AddRenderable(rightRen);
     renderer.AddRenderable(backRen);
+    renderer.AddRenderable(lamp);
 }
 
 int main(int argc, char* argv[]) {
     uint32_t resX = 512, resY = 512;
     
-    YAR::Renderer renderer{resX, resY, 1024, 8, 8};
-
-    YAM::Vector3 cameraPosition(0.f, 0.f, -4.f);
-    YAM::Vector3 cameraDirection = YAM::Vector3{0.f} - cameraPosition;
-    cameraDirection = cameraDirection.Normal();
-
-    YAR::Material emisiveBlue{};
-    emisiveBlue.emisiveColor.hex = 0xffff00ff;
-    emisiveBlue.emmision = 3.f;
+    YAR::Renderer renderer{resX, resY, 4096, 10, 8};
     
-    YAR::Material red{};
-    red.color.hex = 0xffff0000;
-    
-    YAR::Material emmisiveWhite{};
-    emmisiveWhite.emisiveColor.hex = 0xffffffff;
-    emmisiveWhite.emmision = 2.f;
+    YAR::Material sphereOneMat{};
+    sphereOneMat.color.hex = 0xffffffff;
+    sphereOneMat.specular = 1.0f;
 
-    YAM::Sphere sphere {YAM::Vector3{-0.3f, -0.3f, 0.f}, 0.4f};
-    std::shared_ptr<YAR::SphereRenderable> sphereOne = std::make_shared<YAR::SphereRenderable>(emmisiveWhite, sphere);
+    YAM::Sphere sphere {YAM::Vector3{0.5f, 0.0f, 0.0f}, 0.3f};
+    std::shared_ptr<YAR::SphereRenderable> sphereOne = std::make_shared<YAR::SphereRenderable>(sphereOneMat, sphere);
     renderer.AddRenderable(sphereOne);
     
-    sphere = {YAM::Vector3{0.5f, -0.5f, 0.3f}, 0.2f};
-    std::shared_ptr<YAR::SphereRenderable> sphereTwo = std::make_shared<YAR::SphereRenderable>(red, sphere);
-    renderer.AddRenderable(sphereTwo);
+    YAR::Material sphereTwoMat{};
+    sphereTwoMat.color.hex = 0xffffffff;
     
-    sphere = {YAM::Vector3{0.4f, 0.5f, -0.8f}, 0.2f};
-    std::shared_ptr<YAR::SphereRenderable> sphereThree = std::make_shared<YAR::SphereRenderable>(emisiveBlue, sphere);
-    renderer.AddRenderable(sphereThree);
+    sphere = {YAM::Vector3{-0.5f, 0.0f, 0.0f}, 0.3f};
+    std::shared_ptr<YAR::SphereRenderable> sphereTwo = std::make_shared<YAR::SphereRenderable>(sphereTwoMat, sphere);
+    renderer.AddRenderable(sphereTwo);
     
     // YAR::Material material{};
     // material.color.hex = 0xffffffff;
@@ -84,6 +77,10 @@ int main(int argc, char* argv[]) {
     // renderer.AddRenderable(renderable);
 
     CreateCornerBox(renderer);
+    
+    YAM::Vector3 cameraPosition(0.f, 0.f, -3.f);
+    YAM::Vector3 cameraDirection = YAM::Vector3{0.f} - cameraPosition;
+    cameraDirection = cameraDirection.Normal();
     
     // std::unique_ptr<YAR::Camera> camera = std::make_unique<YAR::OrthoCamera>(
     //     resX, resY, cameraPosition, cameraDirection, 3.f, 3.f);

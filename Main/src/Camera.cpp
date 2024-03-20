@@ -64,7 +64,7 @@ namespace YAR{
 
         flt jitterX, jitterY;
         random.RandomPointInCircle(jitterX, jitterY);
-        constexpr flt jitterStrenth = 2.f;
+        constexpr flt jitterStrenth = 1.f;
         jitterX *= jitterStrenth;
         jitterY *= jitterStrenth;
 

@@ -65,6 +65,10 @@ namespace YAM{
 
         static Vector3 Cross(const Vector3& a, const Vector3& b) { return a.Cross(b); }
 
+        static Vector3 Lerp(const Vector3& a, const Vector3& b, float t) {
+            return a + (b - a) * t;
+        }
+
         Vector3& operator=(Vector3 const& another) {
             if (this == &another) {
                 return *this;

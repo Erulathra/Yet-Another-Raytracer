@@ -7,6 +7,7 @@ namespace YAR{
         YAM::Color color;
         YAM::Color emisiveColor;
         float emmision;
+        float specular;
 
         Material();
     };
