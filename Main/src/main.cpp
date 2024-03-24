@@ -52,7 +52,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
 int main(int argc, char* argv[]) {
     uint32_t resX = 512, resY = 512;
     
-    YAR::Renderer renderer{resX, resY, 4096, 10, 8};
+    YAR::Renderer renderer{resX, resY, 64, 10, 8};
     
     YAR::Material sphereOneMat{};
     sphereOneMat.color.hex = 0xffffffff;
@@ -69,12 +69,14 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<YAR::SphereRenderable> sphereTwo = std::make_shared<YAR::SphereRenderable>(sphereTwoMat, sphere);
     renderer.AddRenderable(sphereTwo);
     
-    // YAR::Material material{};
-    // material.color.hex = 0xffffffff;
-    // std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
-    // YAM::Mat4 transform = YAM::Mat4::Translation(0.5f, 0.2f, 0.f) * YAM::Mat4::RotationY(YAM::ToRad(180.f)) * YAM::Mat4::Scale(0.2f, 0.2, 0.2) ;
-    // renderable->Transform(transform);
-    // renderer.AddRenderable(renderable);
+    YAR::Material material{};
+    material.color.hex = 0xffffffff;
+    material.specular = 0.5;
+    
+    std::shared_ptr<YAR::MeshRenderable> renderable = std::make_shared<YAR::MeshRenderable>(material,"res/plumber.obj");
+    YAM::Mat4 transform = YAM::Mat4::Translation(0.0f, -0.5f, -0.5f) * YAM::Mat4::RotationY(YAM::ToRad(180.f)) * YAM::Mat4::Scale(0.2f, 0.2, 0.2) ;
+    renderable->Transform(transform);
+    renderer.AddRenderable(renderable);
 
     CreateCornerBox(renderer);
     
