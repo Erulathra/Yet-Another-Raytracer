@@ -33,12 +33,12 @@ namespace YAM{
         }
 
         uint32_t RandInt() const {
-            // implements fast Wang-Hash
-            seed = (seed ^ 61U) ^ (seed >> 16U);
-            seed = seed * 9U;
-            seed = seed ^ (seed >> 4);
-            seed = seed * 0x27d4eb2dU;
-            seed = seed ^ (seed >> 15);
+            uint32_t z = seed + 0x9e3779b9;
+            z ^= z >> 15; // 16 for murmur3
+            z *= 0x85ebca6b;
+            z ^= z >> 13;
+            z *= 0xc2b2ae35;
+            seed = z ^ (z >> 16);
             return seed;
         }
 

@@ -53,6 +53,17 @@ namespace YAR{
 
         YAM::flt nearPlaneWidth;
         YAM::flt nearPlaneHeight;
+        
+    private:
+        YAM::Vector3 screenStart;
+        
+        YAM::Vector3 screenRight;
+        YAM::Vector3 screenLeft;
+        YAM::Vector3 screenUp;
+        YAM::Vector3 screenDown;
+
+        YAM::flt screenStepX;
+        YAM::flt screenStepY;
 
     public:
         PerspectiveCamera(int32_t resolutionX, int32_t resolutionY,

@@ -44,24 +44,23 @@ namespace YAR{
           , nearPlaneHeight(0) {
         screenPosition = GetScreenPosition();
         CalculateNearPlane(nearPlaneWidth, nearPlaneHeight);
+        
+        screenRight = -direction.Cross({0., 1., 0.}).Normal();
+        screenUp = -direction.Cross(screenRight).Normal();
+        screenLeft = -screenRight;
+        screenDown = -screenUp;
+        
+        screenStart = screenLeft * nearPlaneWidth * 0.5
+            + screenUp * nearPlaneHeight * 0.5
+            + direction * nearPlaneDistance + position;
+        
+        screenStepX = nearPlaneWidth / resolutionX;
+        screenStepY = nearPlaneHeight / resolutionY;
     }
 
     PerspectiveCamera::~PerspectiveCamera() = default;
 
     Ray PerspectiveCamera::GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const {
-        const Vector3 screenRight = -direction.Cross({0., 1., 0.}).Normal();
-        const Vector3 screenUp = -direction.Cross(screenRight).Normal();
-
-        const Vector3 screenLeft = -screenRight;
-        const Vector3 screenDown = -screenUp;
-
-        const Vector3 screenStart = screenLeft * nearPlaneWidth * 0.5
-            + screenUp * nearPlaneHeight * 0.5
-            + direction * nearPlaneDistance + position;
-
-        const flt screenStepX = nearPlaneWidth / resolutionX;
-        const flt screenStepY = nearPlaneHeight / resolutionY;
-
         flt jitterX, jitterY;
         random.RandomPointInCircle(jitterX, jitterY);
         constexpr flt jitterStrenth = 1.f;
