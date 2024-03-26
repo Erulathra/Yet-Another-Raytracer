@@ -144,10 +144,27 @@ namespace YAM{
         flt distance;
     };
 
-    static Vector3 Reflect(const Vector3& dirIn, const Vector3& normal) {
-        return dirIn - 2 * Vector3::Dot(dirIn, normal) * normal;
+    static Vector3 Reflect(const Vector3& in, const Vector3& normal) {
+        return in - 2 * Vector3::Dot(in, normal) * normal;
     }
 
+    static Vector3 Refract(const Vector3& in, const Vector3& normal, flt ratio) {
+        const flt k = 1. - ratio * ratio * (1. - Vector3::Dot(normal, in) * Vector3::Dot(normal, in));
+        if (k < 0.) {
+            return Vector3{0};
+        }
+
+        return ratio * in - (ratio * Vector3::Dot(normal, in) + std::sqrt(k)) * normal;
+    }
+    
+    static flt Sat(flt x) {
+        return std::min(static_cast<flt>(1.), std::max(static_cast<flt>(0.), x));
+    }
+
+    static flt Fresnell(const Vector3& in, const Vector3& normal) {
+        const flt result = Vector3::Dot(in, normal);
+        return Sat(result);
+    }
 
     class LinearMath {
     public:

@@ -44,6 +44,7 @@ namespace YAR{
 
         YAM::Vector3 finalColor {0.f};
         YAM::Vector3 rayColor {1.f};
+        float refractiveIndex = 1.f;
 
         uint32_t maxBounces = owner.GetMaxBounces();
         
@@ -51,23 +52,34 @@ namespace YAR{
             RenderHitInfo hitInfo;
 
             if (CalculateRayCollision(ray, hitInfo)) {
-                ray.point = hitInfo.hitPoint;
-                // cosine weighted ray districution
-                const YAM::Vector3 diffuse = (hitInfo.normal + random.RandomDirection()).Normal();
-                const YAM::Vector3 specular = YAM::Reflect(ray.direction, hitInfo.normal);
-
-                ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
-
                 const Material* material = hitInfo.material;
                 
-                const YAM::Vector3 materialColor = material->color.ToVector();
-                const YAM::Vector3 emissionColor = material->emisiveColor.ToVector();
+                // cosine weighted ray districution
+                const YAM::Vector3 diffuse = (hitInfo.normal + random.RandomDirection()).Normal();
+                const YAM::Vector3 specular = Reflect(ray.direction, hitInfo.normal);
+                const YAM::Vector3 refraction = Refract(ray.direction, hitInfo.normal, refractiveIndex / material->refractiveIndex);
+
+                // const float fresnell = YAM::Fresnell(ray.direction, hitInfo.normal);
+                // ray.direction = YAM::Vector3::Lerp(refraction, ray.direction, fresnell);
+                if (material->transparency > std::numeric_limits<float>::min()) {
+                    ray.direction = refraction;
+                    refractiveIndex = material->refractiveIndex;
+                    
+                    rayColor = rayColor.Mul(material->color.ToVector());
+                }
+                else {
+                    ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
+                    
+                    const YAM::Vector3 materialColor = material->color.ToVector();
+                    const YAM::Vector3 emissionColor = material->emisiveColor.ToVector();
+                    const YAM::Vector3 emitedLight = emissionColor * material->emmision;
+                    const float lightStrenght = YAM::Vector3::Dot(hitInfo.normal, ray.direction);
+                    
+                    finalColor += emitedLight.Mul(rayColor);
+                    rayColor = rayColor.Mul(materialColor) * lightStrenght;
+                }
                 
-                const YAM::Vector3 emitedLight = emissionColor * material->emmision;
-                const float lightStrenght = YAM::Vector3::Dot(hitInfo.normal, ray.direction);
-                
-                finalColor += emitedLight.Mul(rayColor);
-                rayColor = rayColor.Mul(materialColor) * lightStrenght;
+                ray.point = hitInfo.hitPoint;
             }
             else {
                 break;

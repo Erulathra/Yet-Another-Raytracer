@@ -8,7 +8,9 @@ Material::Material()
     : color({0xff000000})
       , emisiveColor({0xff000000})
       , emmision(0)
-      , specular(0) {}
+      , specular(0)
+      , transparency(0)
+      , refractiveIndex(1) {}
 
 RenderHitInfo::RenderHitInfo()
     : material() {}

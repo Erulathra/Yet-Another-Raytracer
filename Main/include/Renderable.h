@@ -9,6 +9,9 @@ namespace YAR{
         float emmision;
         float specular;
 
+        float transparency;
+        float refractiveIndex;
+
         Material();
     };
 
