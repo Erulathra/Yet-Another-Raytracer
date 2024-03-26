@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstdint>
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -66,6 +67,16 @@ namespace YAM{
             result.z = this->z + another.z;
             result.w = this->w + another.w;
             return result;
+        }
+
+        flt operator[] (const uint8_t index) const {
+            const flt values[] = {x, y, z, w};
+            return values[index];
+        }
+        
+        flt& operator[] (const uint8_t index) {
+            flt* values[] = {&x, &y, &z, &w};
+            return *values[index];
         }
 
         Vector4 operator-(Vector4 const& another) const {

@@ -134,6 +134,16 @@ namespace YAM{
             result.z = this->z / scalar;
             return result;
         }
+        
+        flt operator[] (const uint8_t index) const {
+            const flt values[] = {x, y, z};
+            return values[index];
+        }
+        
+        flt& operator[] (const uint8_t index) {
+            flt* values[] = {&x, &y, &z};
+            return *values[index];
+        }
 
         void operator*=(flt const& scalar) { *this = *this * scalar; }
         void operator/=(flt const& scalar) { *this = *this / scalar; }

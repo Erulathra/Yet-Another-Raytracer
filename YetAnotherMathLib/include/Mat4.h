@@ -15,7 +15,7 @@ namespace YAM {
         static constexpr uint8_t GRID_SIZE_X = 4;
         static constexpr uint8_t GRID_SIZE_Y = 4;
 
-        std::array<std::array<flt, 4>, 4> grid{};
+        std::array<Vector4, 4> grid{};
 
     public:
         Mat4() : Mat4(0) {}
@@ -45,6 +45,14 @@ namespace YAM {
         
         flt& operator[](const std::pair<int, int>& coordinates) {
             return grid[coordinates.first][coordinates.second];
+        }
+        
+        Vector4& operator[](const uint32_t index) {
+            return grid[index];
+        }
+        
+        const Vector4& operator[](const uint32_t index) const {
+            return grid[index];
         }
 
         Mat4 operator-() const {
@@ -375,6 +383,34 @@ namespace YAM {
             result[{1, 0}] = std::sin(radians);
             result[{1, 1}] = std::cos(radians);
             return  result;
+        }
+
+        static Mat4 Perspective(flt fov, flt aspect, flt near, flt far) {
+            Mat4 result {0};
+            
+            flt f = std::cos(fov) / std::sin(fov);
+            result[{0, 0}] = f / aspect;
+            result[{1, 1}] = f;
+            result[{2, 2}] = (far + near) / (near - far);
+            result[{3, 2}] = -1.;
+            result[{3, 2}] = 2. * far * near / (near - far);
+
+            return result;
+        }
+
+        static Mat4 LookAt(const Vector3& eye, const Vector3& center, const Vector3& up) {
+            Mat4 result {0};
+            
+            const Vector3 forward = (center - eye).Normal();
+            const Vector3 left = Vector3::Cross(forward, up);
+            const Vector3 trueUp = Vector3::Cross(left, forward);
+
+            result[0] = Vector4{left[0], up[0], -forward[0], 0};
+            result[1] = Vector4{left[1], up[1], -forward[1], 0};
+            result[2] = Vector4{left[2], up[2], -forward[2], 0};
+            result[3] = Vector4{-eye[0], -eye[1], -eye[2], 1};
+
+            return result;
         }
         
         Vector4 operator*(const Vector4& vec4) const {
