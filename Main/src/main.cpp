@@ -17,9 +17,9 @@ void CreateCornerBox(YAR::Renderer& renderer) {
 
     YAM::Mat4 wholeT = YAM::Mat4::Scale(2.f, 2.f, 2.f);
 
-    YAM::Mat4 coreT = YAM::Mat4::RotationY(YAM::ToRad(180));
-    std::shared_ptr<YAR::MeshRenderable> coreRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/cornerboxCenter.obj");
-    coreRen->Transform(coreT * wholeT);
+    // YAM::Mat4 coreT = YAM::Mat4::RotationY(YAM::ToRad(180));
+    // std::shared_ptr<YAR::MeshRenderable> coreRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/cornerboxCenter.obj");
+    // coreRen->Transform(coreT * wholeT);
 
     YAM::Mat4 leftT = YAM::Mat4::Translation(-1.f, 0.f, 0.f) * YAM::Mat4::RotationZ(YAM::ToRad(90.f));
     std::shared_ptr<YAR::MeshRenderable> leftRen = std::make_shared<YAR::MeshRenderable>(greenMat,"res/plane.obj");
@@ -33,6 +33,21 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     std::shared_ptr<YAR::MeshRenderable> backRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
     backRen->Transform(back * wholeT);
     
+    YAM::Mat4 front = YAM::Mat4::Translation(0.f, 0.f, 1.f) * YAM::Mat4::RotationX(YAM::ToRad(-90.f));
+    std::shared_ptr<YAR::MeshRenderable> frontRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
+    frontRen->Transform(front * wholeT);
+    renderer.AddRenderable(frontRen);
+    
+    YAM::Mat4 floor = YAM::Mat4::Translation(0.f, -1.f, 0.f);
+    std::shared_ptr<YAR::MeshRenderable> floorRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
+    floorRen->Transform(floor * wholeT);
+    renderer.AddRenderable(floorRen);
+    
+    YAM::Mat4 ceil = YAM::Mat4::Translation(0.f, 1.f, 0.f) * YAM::Mat4::RotationX(YAM::ToRad(180.f));
+    std::shared_ptr<YAR::MeshRenderable> ceilRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
+    ceilRen->Transform(ceil * wholeT);
+    renderer.AddRenderable(ceilRen);
+    
     YAR::Material whiteEmisiveMat{};
     whiteEmisiveMat.color.hex = 0xffffffff;
     whiteEmisiveMat.emisiveColor.hex = 0xffffffff;
@@ -42,7 +57,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     std::shared_ptr<YAR::MeshRenderable> lamp = std::make_shared<YAR::MeshRenderable>(whiteEmisiveMat,"res/cornerboxLamp.obj");
     lamp->Transform(lampT * wholeT);
     
-    renderer.AddRenderable(coreRen);
+    // renderer.AddRenderable(coreRen);
     renderer.AddRenderable(leftRen);
     renderer.AddRenderable(rightRen);
     renderer.AddRenderable(backRen);
@@ -52,7 +67,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
 int main(int argc, char* argv[]) {
     uint32_t resX = 512, resY = 512;
     
-    YAR::Renderer renderer{resX, resY, 512, 10, 8};
+    YAR::Renderer renderer{resX, resY, 256, 10, 8};
     
     YAR::Material sphereOneMat{};
     sphereOneMat.color.hex = 0xffffffff;
@@ -70,12 +85,12 @@ int main(int argc, char* argv[]) {
     renderer.AddRenderable(sphereTwo);
     
     YAR::Material sphereThreeMat{};
-    sphereThreeMat.color.hex = 0xffffffff;
+    sphereThreeMat.color.hex = 0xffff0000;
     sphereThreeMat.transparency = 1.f;
-    sphereThreeMat.refractiveIndex = 1.52f;
+    sphereThreeMat.refractiveIndex = 1.2f;
     sphereThreeMat.specular = 1.f;
     
-    sphere = {YAM::Vector3{0.0f, -0.0f, -0.5f}, 1.0f};
+    sphere = {YAM::Vector3{-0.0f, -0.0f, -0.5f}, 0.5f};
     std::shared_ptr<YAR::SphereRenderable> sphereThree = std::make_shared<YAR::SphereRenderable>(sphereThreeMat, sphere);
     renderer.AddRenderable(sphereThree);
     

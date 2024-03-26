@@ -162,8 +162,12 @@ namespace YAM{
     }
 
     static flt Fresnell(const Vector3& in, const Vector3& normal) {
-        const flt result = Vector3::Dot(in, normal);
-        return Sat(result);
+        const flt result = Vector3::Dot(normal, in);
+        return Sat(static_cast<flt>(1.) - result);
+    }
+
+    static flt Lerp(flt a, flt b, flt t) {
+        return (1 - t) * a + t * b;
     }
 
     class LinearMath {
