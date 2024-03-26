@@ -63,7 +63,7 @@ namespace YAR{
     Ray PerspectiveCamera::GetRay(uint32_t x, uint32_t y, const YAM::Random& random) const {
         flt jitterX, jitterY;
         random.RandomPointInCircle(jitterX, jitterY);
-        constexpr flt jitterStrenth = 1.f;
+        constexpr flt jitterStrenth = 1.5f;
         jitterX *= jitterStrenth;
         jitterY *= jitterStrenth;
 

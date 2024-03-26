@@ -52,7 +52,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
 int main(int argc, char* argv[]) {
     uint32_t resX = 512, resY = 512;
     
-    YAR::Renderer renderer{resX, resY, 4096, 10, 8};
+    YAR::Renderer renderer{resX, resY, 64, 10, 8};
     
     YAR::Material sphereOneMat{};
     sphereOneMat.color.hex = 0xffffffff;
