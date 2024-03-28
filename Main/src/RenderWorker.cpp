@@ -58,16 +58,25 @@ namespace YAR{
                 const YAM::Vector3 specular = Reflect(ray.direction, hitInfo.normal);
 
                 const float dirDotNormal = YAM::Vector3::Dot(ray.direction, hitInfo.normal);
-                const float refractiveRatio = dirDotNormal < std::numeric_limits<float>::min()
-                    ? 1.f / material->refractiveIndex
-                    : material->refractiveIndex / 1.f;
+                float refractiveRatio;
+                float normalFactor;
+                
+                if (dirDotNormal < 0.) {
+                    refractiveRatio = 1.f / material->refractiveIndex;
+                    normalFactor = 1.f;
+                }
+                else {
+                    refractiveRatio = material->refractiveIndex;
+                    normalFactor = -1.f;
+                }
 
-                const YAM::Vector3 refraction = Refract(ray.direction, hitInfo.normal, refractiveRatio);
+                const YAM::Vector3 refraction = Refract(ray.direction, normalFactor * hitInfo.normal, refractiveRatio);
                 
                 ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
 
                 float fresnell = 1.f - YAM::Fresnell(ray.direction, hitInfo.normal);
                 fresnell = std::pow(fresnell, 0.6f);
+                fresnell = 1.f;
                 
                 ray.direction = YAM::Vector3::Lerp(ray.direction, refraction, material->transparency * fresnell);
                     

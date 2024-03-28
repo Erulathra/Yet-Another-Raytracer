@@ -148,13 +148,14 @@ namespace YAM{
         return in - 2 * Vector3::Dot(in, normal) * normal;
     }
 
-    static Vector3 Refract(const Vector3& in, const Vector3& normal, flt ratio) {
-        const flt k = 1. - ratio * ratio * (1. - Vector3::Dot(normal, in) * Vector3::Dot(normal, in));
+    static Vector3 Refract(const Vector3& in, const Vector3& normal, flt eta) {
+        const float dotValue = Vector3::Dot(normal, in);
+        const flt k = static_cast<flt>(1) - eta * eta * (static_cast<flt>(1) - dotValue * dotValue);
         if (k < 0.) {
             return Vector3{0};
         }
 
-        return ratio * in - (ratio * Vector3::Dot(normal, in) + std::sqrt(k)) * normal;
+        return eta * in - (eta * dotValue + std::sqrt(k)) * normal;
     }
     
     static flt Sat(flt x) {
@@ -252,15 +253,16 @@ namespace YAM{
             if (delta < 0.f)
                 return false;
 
-            const flt solutionOne = (-b - std::sqrt(delta)) / (2. * a);
-            const flt solutionTwo = (-b + std::sqrt(delta)) / (2. * a);
-
-            const flt nearestSolution = solutionOne <= solutionTwo ? solutionOne : solutionTwo;
-            if (nearestSolution <= 0)
+            flt solution = (-b - std::sqrt(delta)) / (static_cast<flt>(2) * a);
+            if (solution < SmallFloat) {
+                solution = (-b + std::sqrt(delta)) / (static_cast<flt>(2) * a);
+            }
+                
+            if (solution <= 0)
                 return false;
 
-            hitInfo.hitPoint = ray.point + ray.direction * nearestSolution;
-            hitInfo.distance = nearestSolution;
+            hitInfo.hitPoint = ray.point + ray.direction * solution;
+            hitInfo.distance = solution;
             hitInfo.normal = (hitInfo.hitPoint - sphere.center).Normal();
 
             return true;
