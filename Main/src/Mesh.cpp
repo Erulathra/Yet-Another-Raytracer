@@ -21,6 +21,9 @@ namespace YAR{
         
         std::vector<YAM::Vector3> normals{};
         std::vector<uint32_t> norm_indicies{};
+        
+        std::vector<YAM::Vector3> uvs{};
+        std::vector<uint32_t> uv_indicies{};
 
         // Parse file
         std::string fileLine;
@@ -46,6 +49,11 @@ namespace YAR{
                 std::sscanf(parameters, "%f %f %f", &normal.x, &normal.y, &normal.z);
                 normals.push_back(normal);
             }
+            if (strcmp(command, "vt") == 0) {
+                YAM::Vector3 uv{0};
+                std::sscanf(parameters, "%f %f", &uv.x, &uv.y);
+                uvs.push_back(uv);
+            }
             if (strcmp(command, "f") == 0) {
                 uint32_t v1, v2, v3;
                 uint32_t t1, t2, t3;
@@ -62,6 +70,10 @@ namespace YAR{
                 norm_indicies.push_back(n1);
                 norm_indicies.push_back(n2);
                 norm_indicies.push_back(n3);
+
+                uv_indicies.push_back(t1);
+                uv_indicies.push_back(t2);
+                uv_indicies.push_back(t3);
             }
         }
 
@@ -78,10 +90,15 @@ namespace YAR{
             const uint32_t n1 = norm_indicies[indiceID] - 1;
             const uint32_t n2 = norm_indicies[indiceID + 1] - 1;
             const uint32_t n3 = norm_indicies[indiceID + 2] - 1;
+            
+            const uint32_t t1 = uv_indicies[indiceID] - 1;
+            const uint32_t t2 = uv_indicies[indiceID + 1] - 1;
+            const uint32_t t3 = uv_indicies[indiceID + 2] - 1;
 
             trianges.emplace_back(
                 verticies[v1],verticies[v2],verticies[v3],
-                normals[n1],normals[n2],normals[n3]
+                normals[n1],normals[n2],normals[n3],
+                uvs[t1], uvs[t2],uvs[t3]
                 );
         }
         

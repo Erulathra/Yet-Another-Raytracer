@@ -71,16 +71,25 @@ namespace YAR{
                 }
 
                 const YAM::Vector3 refraction = Refract(ray.direction, normalFactor * hitInfo.normal, refractiveRatio);
-                
-                ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
 
                 float fresnell = 1.f - YAM::Fresnell(ray.direction, hitInfo.normal);
                 fresnell = std::pow(fresnell, 0.6f);
-                fresnell = 1.f;
+
+                if (random.RandFloat() > fresnell * material->transparency) {
+                    ray.direction = YAM::Vector3::Lerp(diffuse, specular, hitInfo.material->specular);
+                }
+                else {
+                    ray.direction = YAM::Vector3::Lerp(ray.direction, refraction, material->transparency * fresnell);
+                }
                 
-                ray.direction = YAM::Vector3::Lerp(ray.direction, refraction, material->transparency * fresnell);
-                    
-                const YAM::Vector3 materialColor = material->color.ToVector();
+                YAM::Vector3 materialColor;
+                if (material->texture == nullptr) {
+                    materialColor = material->color.ToVector();
+                }
+                else {
+                    materialColor = material->texture->Sample(hitInfo.uv).ToVector();
+                }
+                
                 const YAM::Vector3 emissionColor = material->emisiveColor.ToVector();
                 const YAM::Vector3 emitedLight = emissionColor * material->emmision;
                 float lightStrenght = YAM::Vector3::Dot(hitInfo.normal, ray.direction);

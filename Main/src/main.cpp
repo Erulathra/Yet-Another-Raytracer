@@ -3,6 +3,7 @@
 #include "Mat4.h"
 #include "Renderable.h"
 #include "Renderer.h"
+#include "Texture.h"
 #include "Vector3.h"
 
 void CreateCornerBox(YAR::Renderer& renderer) {
@@ -14,6 +15,10 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     
     YAR::Material whiteMat{};
     whiteMat.color.hex = 0xffffffff;
+    
+    std::shared_ptr<YAR::Texture> texture = std::make_shared<YAR::Texture>("res/cat.png");
+    YAR::Material texMat{};
+    texMat.texture = texture;
 
     YAM::Mat4 wholeT = YAM::Mat4::Scale(2.f, 2.f, 2.f);
 
@@ -30,7 +35,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     backRen->Transform(back * wholeT);
     
     YAM::Mat4 front = YAM::Mat4::Translation(0.f, 0.f, 1.f) * YAM::Mat4::RotationX(YAM::ToRad(-90.f));
-    std::shared_ptr<YAR::MeshRenderable> frontRen = std::make_shared<YAR::MeshRenderable>(whiteMat,"res/plane.obj");
+    std::shared_ptr<YAR::MeshRenderable> frontRen = std::make_shared<YAR::MeshRenderable>(texMat,"res/plane.obj");
     frontRen->Transform(front * wholeT);
     
     YAM::Mat4 floor = YAM::Mat4::Translation(0.f, -1.f, 0.f);
@@ -44,7 +49,7 @@ void CreateCornerBox(YAR::Renderer& renderer) {
     YAR::Material whiteEmisiveMat{};
     whiteEmisiveMat.color.hex = 0xffffffff;
     whiteEmisiveMat.emisiveColor.hex = 0xffffffff;
-    whiteEmisiveMat.emmision = 10.f;
+    whiteEmisiveMat.emmision = 15.f;
 
     YAM::Mat4 lampT = YAM::Mat4::Translation(0.f, 0.5f, 0.f) * YAM::Mat4::Scale(0.5f, 0.5f, 0.5f);
     std::shared_ptr<YAR::MeshRenderable> lamp = std::make_shared<YAR::MeshRenderable>(whiteEmisiveMat,"res/cornerboxLamp.obj");
@@ -82,10 +87,10 @@ int main(int argc, char* argv[]) {
     YAR::Material sphereThreeMat{};
     sphereThreeMat.color.hex = 0xffffffff;
     sphereThreeMat.transparency = 1.f;
-    sphereThreeMat.refractiveIndex = 1.2f;
+    sphereThreeMat.refractiveIndex = 1.1f;
     sphereThreeMat.specular = 1.f;
     
-    sphere = {YAM::Vector3{0.0f, -0.5f, -0.5f}, 0.3f};
+    sphere = {YAM::Vector3{0.0f, 0.0f, -0.5f}, 0.3f};
     std::shared_ptr<YAR::SphereRenderable> sphereThree = std::make_shared<YAR::SphereRenderable>(sphereThreeMat, sphere);
     renderer.AddRenderable(sphereThree);
     

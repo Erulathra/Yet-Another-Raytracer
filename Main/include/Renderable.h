@@ -1,6 +1,7 @@
 #pragma once
 #include "LinearMath.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 namespace YAR{
     struct Material {
@@ -11,6 +12,8 @@ namespace YAR{
 
         float transparency;
         float refractiveIndex;
+
+        std::shared_ptr<YAR::Texture> texture;
 
         Material();
     };
@@ -24,6 +27,7 @@ namespace YAR{
             hitPoint = hitInfo.hitPoint;
             normal = hitInfo.normal;
             distance = hitInfo.distance;
+            uv = hitInfo.uv;
             material = hitInfo.material;
             
             return *this;

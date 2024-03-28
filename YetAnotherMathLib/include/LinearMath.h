@@ -98,18 +98,23 @@ namespace YAM{
         Vector3 norB;
         Vector3 norC;
 
+        Vector3 uvA;
+        Vector3 uvB;
+        Vector3 uvC;
+
         Triangle(const Vector3& posA, const Vector3& posB, const Vector3& posC)
-            : Triangle(posA, posB, posC, Vector3{0.f}, Vector3{0.f}, Vector3{0.f}) {}
+            : Triangle(posA, posB, posC,
+                       Vector3{0.f}, Vector3{0.f}, Vector3{0.f},
+                       Vector3{0.f}, Vector3{0.f}, Vector3{0.f}
+            ) {}
 
         Triangle(
             const Vector3& posA, const Vector3& posB, const Vector3& posC,
-            const Vector3& norA, const Vector3& norB, const Vector3& norC)
-            : posA(posA)
-              , posB(posB)
-              , posC(posC)
-              , norA(norA)
-              , norB(norB)
-              , norC(norC) {}
+            const Vector3& norA, const Vector3& norB, const Vector3& norC,
+            const Vector3& uvA, const Vector3& uvB, const Vector3& uvC)
+            : posA(posA), posB(posB), posC(posC)
+              , norA(norA), norB(norB), norC(norC)
+              , uvA(uvA), uvB(uvB), uvC(uvC) {}
     };
 
     union Color {
@@ -141,6 +146,8 @@ namespace YAM{
     struct HitInfo {
         Vector3 hitPoint;
         Vector3 normal;
+        Vector3 uv;
+        
         flt distance;
     };
 
@@ -163,7 +170,7 @@ namespace YAM{
     }
 
     static flt Fresnell(const Vector3& in, const Vector3& normal) {
-        const flt result = Vector3::Dot(normal, in);
+        const flt result = std::abs(Vector3::Dot(normal, in));
         return Sat(static_cast<flt>(1.) - result);
     }
 
@@ -264,6 +271,7 @@ namespace YAM{
             hitInfo.hitPoint = ray.point + ray.direction * solution;
             hitInfo.distance = solution;
             hitInfo.normal = (hitInfo.hitPoint - sphere.center).Normal();
+            hitInfo.uv = Vector3{0};
 
             return true;
         }
@@ -297,6 +305,7 @@ namespace YAM{
                 hitInfo.hitPoint = ray.point + ray.direction * distance;
                 hitInfo.distance = distance;
                 hitInfo.normal = (tri.norA * barW + tri.norB * barU + tri.norC * barV).Normal();
+                hitInfo.uv = (tri.uvA * barW + tri.uvB * barU + tri.uvC * barV);
 
                 return true;
             }
